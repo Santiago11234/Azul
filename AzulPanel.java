@@ -57,8 +57,9 @@ import java.awt.event.MouseEvent;
 	 // if ( Draw Boards = true ) - draw the fucking boards 
 		   // if ( BoardNum == 1 && FactoryT
 
+
            g.drawImage( board , 500 , 200 , 400 , 400 , null);
-           
+
 	}
 	
 	
