@@ -55,10 +55,7 @@ import java.awt.event.MouseEvent;
 		
 	 // if ( Draw Boards = true ) - draw the fucking boards 
 		   // if ( BoardNum == 1 && FactoryT
-		
-		
-		
-		
+           
 	}
 	
 	
