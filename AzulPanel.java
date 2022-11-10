@@ -15,13 +15,14 @@ import javax.swing.JComponent;
 
 public class  AzulPanel extends JPanel implements MouseListener {
 	
-	
+	private BufferedImage board;
 	
 	
 	
 	public AzulPanel (){ 
 	       try {
-	        	        
+	        
+            board = ImageIO.read(new File("Board.jpg"));
 	           
 	       }
 	       
@@ -54,8 +55,10 @@ public class  AzulPanel extends JPanel implements MouseListener {
 		
 	 // if ( Draw Boards = true ) - draw the fucking boards 
 		   // if ( BoardNum == 1 && FactoryT
-		   
-            
+
+
+           g.drawImage( board , 500 , 200 , 400 , 400 , null);
+
 	}
 	
 	
