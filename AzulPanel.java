@@ -15,7 +15,7 @@ import javax.swing.JComponent;
 
 public class  AzulPanel extends JPanel implements MouseListener {
 	
-	private BufferedImage board;
+	private BufferedImage board,home;
 	
 	
 	
@@ -23,7 +23,7 @@ public class  AzulPanel extends JPanel implements MouseListener {
 	       try {
 	        
             board = ImageIO.read(new File("Board.jpg"));
-	           
+	        home = ImageIO.read(new File("AzulHome.png"));
 	       }
 	       
 	       catch ( Exception E) {
@@ -37,6 +37,16 @@ public class  AzulPanel extends JPanel implements MouseListener {
 	     
 	}
 
+	public void paint (Graphics g) {
+	      
+		// get Random Start Player * This will be in constructor assign it to this int
+		
+	 // if ( Draw Boards = true ) - draw the fucking boards 
+		   // if ( BoardNum == 1 && FactoryT
+		g.drawImage(home,0,0,1600,960, null);
+        //g.drawImage( board , 500 , 200 , 400 , 400 , null);
+
+	}
 
 
 	public void mousePressed(MouseEvent e) { }
@@ -49,17 +59,7 @@ public class  AzulPanel extends JPanel implements MouseListener {
 	}
 
 
-	public void paint (Graphics g) {
-	      
-		// get Random Start Player * This will be in constructor assign it to this int
-		
-	 // if ( Draw Boards = true ) - draw the fucking boards 
-		   // if ( BoardNum == 1 && FactoryT
-
-
-           g.drawImage( board , 500 , 200 , 400 , 400 , null);
-
-	}
+	
 	
 	
 	
