@@ -38,11 +38,7 @@ public class  AzulPanel extends JPanel implements MouseListener {
 	}
 
 	public void paint (Graphics g) {
-	      
-		// get Random Start Player * This will be in constructor assign it to this int
-		
-	 // if ( Draw Boards = true ) - draw the fucking boards 
-		   // if ( BoardNum == 1 && FactoryT
+	    
 		g.drawImage(home,0,0,1600,960, null);
         //g.drawImage( board , 500 , 200 , 400 , 400 , null);
 
