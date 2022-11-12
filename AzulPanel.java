@@ -46,7 +46,9 @@ import java.awt.event.MouseEvent;
 	public void mouseExited(MouseEvent e) { }
 	public void mouseClicked (MouseEvent e )
 	{
-		
+		int xc = e.getX();
+		int yc = e.getY();
+		System.out.println("loc is ("+xc+", "+yc+")");
 	}
 
 
