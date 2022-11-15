@@ -69,6 +69,7 @@ public class AzulPanel extends JPanel implements ActionListener , MouseListener 
 			if (e.getSource() == button1) {
 				  step2 = true;
 			      repaint();
+				  
 			}
 		}
 	
