@@ -5,5 +5,3 @@ public class AzulTitle {
 		AzulFrame f = new AzulFrame (" AzulProject ");
 	}
 }
-
-
