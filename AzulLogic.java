@@ -10,6 +10,9 @@ public class AzulLogic {
 	private ArrayList<Integer> centerpile;
 	private ArrayList<Integer> bagOfTiles;
 	private ArrayList<Integer> discard;
+	private int nextPlayerID;
+	private ArrayList<Integer> winner;
+	private int bonusCnt;
 	
 	public AzulLogic() {
 		players = new ArrayList<GameBoard>();
@@ -29,6 +32,9 @@ public class AzulLogic {
 		discard = new ArrayList<Integer>();
 		centerpile.add(5);
 		System.out.println(players);
+		nextPlayerID = 1;
+		winner = new ArrayList<Integer>();
+		bonusCnt++;
 	}
 	
 	public void endTurn() {
@@ -51,6 +57,7 @@ public class AzulLogic {
 		for (int c=0; c<row.size()-1; c++) {
 			discard.add(t);
 		}
+		
 		int r = players.get(0).getIntRow(row);
 		row.clear();
 	
@@ -195,6 +202,8 @@ public class AzulLogic {
 	
 	public int scoreRow(int x, int y) {
 		int s = 1;
+
+		
 		if (x-1 >= 0 && players.get(0).getWall()[x-1][y]) {
 			s++;
 			if (x-2>=0 && players.get(0).getWall()[x-2][y]) {
@@ -243,6 +252,17 @@ public class AzulLogic {
 				}
 			}
 		}
+
+		
+		if (x-1>=0 && players.get(0).getWall()[x-1][y] && y-1>=0 && players.get(0).getWall()[x][y-1]) {
+			s++;
+		} else if (x-1>=0 && players.get(0).getWall()[x-1][y] && y+1<5 && players.get(0).getWall()[x][y+1]) {
+			s++;
+		} else if (x+1<=5 && players.get(0).getWall()[x+1][y] && y+1<5 && players.get(0).getWall()[x][y+1]) {
+			s++;
+		} else if (x+1<=5 && players.get(0).getWall()[x+1][y] && y-1<5 && players.get(0).getWall()[x][y-1]) {
+			s++;
+		}
 		/* if (((players.get(0).getWall()[x-1][y]) || players.get(0).getWall()[x+1][y]) && (players.get(0).getWall()[x][y-1]) || players.get(0).getWall()[x][y+1]) {
 			s = s+1;
 		} */
@@ -282,7 +302,55 @@ public class AzulLogic {
 		Collections.shuffle(bagOfTiles);
 	}
 	
+	public void clearFloorLine() {
+		if (players.get(0).getExtraTiles().size() == 1) {
+			players.get(0).addScore(-1);
+		} else if (players.get(0).getExtraTiles().size() == 2) {
+			players.get(0).addScore(-2);
+		} else if (players.get(0).getExtraTiles().size() == 3) {
+			players.get(0).addScore(-4);
+		} else if (players.get(0).getExtraTiles().size() == 4) {
+			players.get(0).addScore(-6);
+		} else if (players.get(0).getExtraTiles().size() == 5) {
+			players.get(0).addScore(-8);
+		} else if (players.get(0).getExtraTiles().size() == 6) {
+			players.get(0).addScore(-11);
+		} else if (players.get(0).getExtraTiles().size() == 7) {
+			players.get(0).addScore(-14);
+		}
+		if (players.get(0).getExtraTiles().contains(5)) {
+			nextPlayerID = players.get(0).getPlayerID();
+		}
+		players.get(0).getExtraTiles().clear();
+		if (players.get(0).getScore() <= 0) {
+			players.get(0).setScore(0);
+		}
+	}
+	
+	public void newRound() {
+		fillFactories();
+		if (nextPlayerID == 1) {
+			while (players.get(0).getPlayerID() != 1) {
+				Collections.rotate(players, 1);
+			}
+		} else if (nextPlayerID == 2) {
+			while (players.get(0).getPlayerID() != 2) {
+				Collections.rotate(players, 1);
+			}
+		} else if (nextPlayerID == 3) {
+			while (players.get(0).getPlayerID() != 3) {
+				Collections.rotate(players, 1);
+			}
+		} else if (nextPlayerID == 4) {
+			while (players.get(0).getPlayerID() != 4) {
+				Collections.rotate(players, 1);
+			}
+		}
+		centerpile.add(5);
+	}
+	
 	public int getCurrentRow() {
+		
 		if (players.get(0).getRow(1).size() == 1) {
 			return 1;
 		} else if (players.get(0).getRow(2).size() == 2) {
@@ -293,10 +361,17 @@ public class AzulLogic {
 			return 4;
 		} else if (players.get(0).getRow(5).size() == 5) {
 			return 5;
-		} else {
+		} else if (players.get(0).getExtraTiles().size() > 0) {
 			return 6;
+		} else if (players.get(0).ready() && players.get(1).ready() && players.get(2).ready() && players.get(3).ready()) {
+			return 8;
+		} else {
+			return 7;
 		}
+		
+		
 	}
+	
 	
 	public void refillBag() {
 		for (int i=0; i<discard.size(); i++) {
@@ -310,6 +385,7 @@ public class AzulLogic {
 			for (int i=0; i<9; i++) {
 				if (bagOfTiles.size() == 0) {
 					refillBag();
+					Collections.shuffle(bagOfTiles);
 				} 
 				factories.get(i).getFactoryTiles().add(bagOfTiles.remove(0));
 			}
@@ -342,11 +418,69 @@ public class AzulLogic {
 		return x;
 	}
 	
+	public int getColorCntBag(int k) {
+		int x = 0;
+		for (int i=0; i<bagOfTiles.size(); i++) {
+			if (bagOfTiles.get(i) == k) {
+				x++;
+			}
+		}
+		return x;
+	}
+	
+	public boolean checkWall() {
+		for (int i=0; i<players.size(); i++) {
+			if (players.get(i).checkWall()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getBonusCnt() {
+		return bonusCnt;
+	}
+	
+	public void addBonuses() {
+		players.get(0).addBonuses();
+		bonusCnt++;
+	}
+	
+	public void findWinner() {
+		int s1 = players.get(0).getScore();
+		int s2 = players.get(1).getScore();
+		int s3 = players.get(2).getScore();
+		int s4 = players.get(3).getScore();
+		int max = Math.max(s1, s2);
+		max = Math.max(max, s3);
+		max = Math.max(max, s4);
+		if (max == s1) {
+			winner.add(players.get(0).getPlayerID());
+		}
+		if (max == s2) {
+			winner.add(players.get(1).getPlayerID());
+		}
+		if (max == s3) {
+			winner.add(players.get(2).getPlayerID());
+		}
+		if (max == s4) {
+			winner.add(players.get(3).getPlayerID());
+		}
+	}
+	
 	public ArrayList<Integer> getCenterpile() {
 		return centerpile;
 	}
 	
+	public ArrayList<Integer> getWinner() {
+		return winner;
+	}
+	
 	public boolean isRoundOver() {
 		return this.roundIsOver;
+	}
+	
+	public ArrayList<Integer> getBag() {
+		return bagOfTiles;
 	}
 }
