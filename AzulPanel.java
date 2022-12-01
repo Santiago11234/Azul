@@ -12,8 +12,8 @@ import java.awt.Graphics2D;
 
 public class AzulPanel extends JPanel implements MouseListener {
 
-	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground;
-	private GameState gs = GameState.PLAY;
+	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground, homeScreen, wallPaper, bag, bag2;
+	private GameState gs = GameState.HOME;
 	private AzulLogic AL;
 	private ArrayList<Factory> factories;
 	private ArrayList<GameBoard> players;
@@ -31,6 +31,10 @@ public class AzulPanel extends JPanel implements MouseListener {
 			orangeTile = ImageIO.read(AzulPanel.class.getResource("/Images/orangeTile.png"));
 			redTile = ImageIO.read(AzulPanel.class.getResource("/Images/redTile.png"));
 			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodBackground.jpg"));
+			homeScreen = ImageIO.read(AzulPanel.class.getResource("/Images/HomeScreen.png"));
+			wallPaper = ImageIO.read(AzulPanel.class.getResource("/Images/wallPaper.jpg"));
+			bag = ImageIO.read(AzulPanel.class.getResource("/Images/bag.png"));
+			bag2 = ImageIO.read(AzulPanel.class.getResource("/Images/bag2.png"));
 		}
         catch(Exception E){
             System.out.println("Exception Error");
@@ -45,7 +49,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 	
 	public void paint(Graphics g) {
 		// super.paint(g);
-		g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
+
+		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(255,255,255,127));
 		
 		if (gs == GameState.PLAY) {						
@@ -62,6 +67,15 @@ public class AzulPanel extends JPanel implements MouseListener {
 			drawViewingOtherGameBoards(g);
 		} else if (gs == GameState.CLICKTOCONTINUE) {
 			drawClickToContinue(g);
+		} else if (gs == GameState.HOME) {
+			drawHome(g);
+		} else if (gs == GameState.OVER) {
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0,getWidth(), getHeight());
+			g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+			g.drawString("PLAYER[s] " + AL.getWinner() + " WINS THE GAME!", 100, 100);
+		} else if (gs == GameState.VIEWBAG) {
+			drawViewBag(g);
 		}
 	}
 
@@ -94,6 +108,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 				gs = GameState.VIEWCENTERPILE;
 			} else if (x>=50 && x<=200 && y>=0 && y<= 69) { 
 				gs = GameState.VIEWOTHERGAMEBOARDS;
+			} else if (x>=1130 && x<= 1280 && y>=-10 && y<=140) { // g.drawImage(bag,1130,-10,150,150,null);
+				gs = GameState.VIEWBAG;
 			}
 		} else if (isViewingFactory()) {
 			if (x>=804 && x<=1044 && y>=12 && y<=86) {
@@ -163,7 +179,9 @@ public class AzulPanel extends JPanel implements MouseListener {
 					if (!players.get(0).canPlaceTileInRow(5)) return;
 					players.get(0).addTilesToRow(5);
 				}
+				
 				gs = GameState.ENDTURN;
+				
 			}
 			
 		} else if (gs == GameState.ENDTURN) {
@@ -203,9 +221,33 @@ public class AzulPanel extends JPanel implements MouseListener {
 				} else if (AL.getCurrentRow() == 5) {
 					AL.addTileToWall(players.get(0).getRow(5));
 				} else if (AL.getCurrentRow() == 6) {
+					AL.clearFloorLine();
+				} else if (AL.getCurrentRow() == 7) {
 					Collections.rotate(players,3);
+				} else if (AL.getCurrentRow() == 8) {
+					if (AL.checkWall() == true) {
+						AL.addBonuses();
+						if (AL.getBonusCnt() == 4) {
+							AL.findWinner();
+							gs = GameState.OVER;
+						} else {
+							Collections.rotate(players,3);
+						}
+
+					} else {
+						AL.newRound();
+						gs = GameState.PLAY;
+					}
 				}
 			}
+		} else if (gs == GameState.HOME) { // g.drawRect(458, 524, 370, 97);
+			if (x >= 458 && x<= 828 && y>=524 && y<= 621) {
+				gs = GameState.PLAY;
+			}
+		} else if (gs == GameState.VIEWBAG) {
+			if (x>=501 && x<= 781 && y>=2 && y<= 58) {
+				gs = GameState.PLAY;
+			}				
 		}
 		repaint();
 	}
@@ -234,6 +276,11 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(new Color(0,0,0,255));
 		g.setFont(new Font("Calibri", Font.BOLD, 25)); 
 		g.drawString("CENTERPILE", 840, 330);
+		g.drawImage(bag,1130,-10,150,150,null);
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 20)); 
+		g.drawString("TILES: " + AL.getBag().size(), 1170,75);
+		g.setFont(new Font("Calibri", Font.BOLD, 25)); 
 		
 		g.setColor(new Color(0,0,0,127));
 		if (factories.get(0).isEmpty()) {
@@ -262,8 +309,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		}
 		if (factories.get(8).isEmpty()) {
 			g.fillOval(590, 130, 140, 140);
-		}
-		
+		}		
 		if (AL.getCenterpile().isEmpty()) {
 			g.fillOval(780, 190, 260, 260);
 		}
@@ -502,65 +548,22 @@ public class AzulPanel extends JPanel implements MouseListener {
 		if (players.get(0).getRow(1).size() > 0) {
 			g.drawImage(getTileImage(players.get(0).getRow(1).get(0)),246,249,41,41,null);
 		}
-		if (players.get(0).getRow(2).size() > 0) {
-			g.drawImage(getTileImage(players.get(0).getRow(2).get(0)),246,294,41,41,null);
-			if (players.get(0).getRow(2).size() > 1) {
-				g.drawImage(getTileImage(players.get(0).getRow(2).get(1)),201,294,41,41,null);
-			}
+		for (int a=0; a<players.get(0).getRow(2).size(); a++) {
+			g.drawImage(getTileImage(players.get(0).getRow(2).get(0)),246-45*a,294,41,41,null);
 		}
-		if (players.get(0).getRow(3).size() > 0) {
-			g.drawImage(getTileImage(players.get(0).getRow(3).get(0)),246,339,41,41,null);
-			if (players.get(0).getRow(3).size() > 1) {
-				g.drawImage(getTileImage(players.get(0).getRow(3).get(1)),201,339,41,41,null);
-				if (players.get(0).getRow(3).size() > 2) {
-					g.drawImage(getTileImage(players.get(0).getRow(3).get(2)),156,339,41,41,null);
-				}
-			}
+		for (int a=0; a<players.get(0).getRow(3).size(); a++) {
+			g.drawImage(getTileImage(players.get(0).getRow(3).get(0)),246-45*a,339,41,41,null);
 		}
-		if (players.get(0).getRow(4).size() > 0) {
-			g.drawImage(getTileImage(players.get(0).getRow(4).get(0)),246,384,41,41,null);
-			if (players.get(0).getRow(4).size() > 1) {
-				g.drawImage(getTileImage(players.get(0).getRow(4).get(0)),201,384,41,41,null);
-				if (players.get(0).getRow(4).size() > 2) {
-					g.drawImage(getTileImage(players.get(0).getRow(4).get(0)),156,384,41,41,null);
-					if (players.get(0).getRow(4).size() > 3) {
-						g.drawImage(getTileImage(players.get(0).getRow(4).get(0)),111,384,41,41,null);
-					}
-				}
-			}
+		for (int a=0; a<players.get(0).getRow(4).size(); a++) {
+			g.drawImage(getTileImage(players.get(0).getRow(4).get(0)),246-45*a,384,41,41,null);
 		}
-		if (players.get(0).getRow(5).size() > 0) {
-			g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),246,429,41,41,null);
-			if (players.get(0).getRow(5).size() > 1) {
-				g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),201,429,41,41,null);
-				if (players.get(0).getRow(5).size() > 2) {
-					g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),156,429,41,41,null);
-					if (players.get(0).getRow(5).size() > 3) {
-						g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),111,429,41,41,null);
-						if (players.get(0).getRow(5).size() > 4) {
-							g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),66,429,41,41,null);
-						}
-					}
-				}
-			}
+		for (int a=0; a<players.get(0).getRow(5).size(); a++) {
+			g.drawImage(getTileImage(players.get(0).getRow(5).get(0)),246-45*a,429,41,41,null);
 		}
-		
-		if (players.get(0).getExtraTiles().size() > 0) {
-			g.drawImage(getTileImage(players.get(0).getExtraTiles().get(0)),68,507,41,41,null);
-			if (players.get(0).getExtraTiles().size() > 1) {
-				g.drawImage(getTileImage(players.get(0).getExtraTiles().get(1)),116,507,41,41,null);
-				if (players.get(0).getExtraTiles().size() > 2) {
-					g.drawImage(getTileImage(players.get(0).getExtraTiles().get(2)),164,507,41,41,null);
-					if (players.get(0).getExtraTiles().size() > 3) {
-						g.drawImage(getTileImage(players.get(0).getExtraTiles().get(3)),212,507,41,41,null);
-						if (players.get(0).getExtraTiles().size() > 4) {
-							g.drawImage(getTileImage(players.get(0).getExtraTiles().get(4)),260,507,41,41,null);
-				
-						}
-					}
-				}
-			}
+		for (int a=0; a<players.get(0).getExtraTiles().size(); a++) {
+			g.drawImage(getTileImage(players.get(0).getExtraTiles().get(a)),68+48*a,507,41,41,null);
 		}
+
 		
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(2,215,48,205);
@@ -640,215 +643,165 @@ public class AzulPanel extends JPanel implements MouseListener {
 		if (players.get(3).getRow(1).size() > 0) {
 			g.drawImage(getTileImage(players.get(3).getRow(1).get(0)),167+425+425,277,35,35,null);
 		}
+		for (int a=0; a<players.get(3).getRow(2).size(); a++) {
+			g.drawImage(getTileImage(players.get(3).getRow(2).get(0)),166+425+425-38*a,314,35,35,null);
+		}
+		for (int b=0; b<players.get(3).getRow(3).size(); b++) {
+			g.drawImage(getTileImage(players.get(3).getRow(3).get(0)),166+425+425-38*b,351,35,35,null);
+		}
+		for (int c=0; c<players.get(3).getRow(4).size(); c++) {
+			g.drawImage(getTileImage(players.get(3).getRow(4).get(0)),166+425+425-38*c,388,35,35,null);
+		}
+		for (int d=0; d<players.get(3).getRow(5).size(); d++) {
+			g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),166+425+425-38*d,425,35,35,null);
+		}
 		
-		if (players.get(3).getRow(2).size() > 0) {
-			g.drawImage(getTileImage(players.get(3).getRow(2).get(0)),167+425+425,314,35,35,null);
-			if (players.get(3).getRow(2).size() > 1) {
-				g.drawImage(getTileImage(players.get(3).getRow(2).get(1)),129+425+425,314,35,35,null);
-			}
-		}
-		if (players.get(3).getRow(3).size() > 0) {
-			g.drawImage(getTileImage(players.get(3).getRow(3).get(0)),167+425+425,351,35,35,null);
-			if (players.get(3).getRow(3).size() > 1) {
-				g.drawImage(getTileImage(players.get(3).getRow(3).get(1)),129+425+425,351,35,35,null);
-				if (players.get(3).getRow(3).size() > 2) {
-					g.drawImage(getTileImage(players.get(3).getRow(3).get(2)),92+425+425,351,35,35,null);
-				}
-			}
-		}
-		if (players.get(3).getRow(4).size() > 0) {
-			g.drawImage(getTileImage(players.get(3).getRow(4).get(0)),167+425+425,388,35,35,null);
-			if (players.get(3).getRow(4).size() > 1) {
-				g.drawImage(getTileImage(players.get(3).getRow(4).get(0)),129+425+425,388,35,35,null);
-				if (players.get(3).getRow(4).size() > 2) {
-					g.drawImage(getTileImage(players.get(3).getRow(4).get(0)),92+425+425,388,35,35,null);
-					if (players.get(3).getRow(4).size() > 3) {
-						g.drawImage(getTileImage(players.get(3).getRow(4).get(0)),55+425+425,388,35,35,null);
-					}
-				}
-			}
-		}
-		if (players.get(3).getRow(5).size() > 0) {
-			g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),167+425+425,425,35,35,null);
-			if (players.get(3).getRow(5).size() > 1) {
-				g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),129+425+425,425,35,35,null);
-				if (players.get(3).getRow(5).size() > 2) {
-					g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),92+425+425,425,35,35,null);
-					if (players.get(3).getRow(5).size() > 3) {
-						g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),55+425+425,425,35,35,null);
-						if (players.get(3).getRow(5).size() > 4) {
-							g.drawImage(getTileImage(players.get(3).getRow(5).get(0)),18+425+425,425,35,35,null);
-						}
-					}
-				}
-			}
-		}
+		
 		if (players.get(1).getRow(1).size() > 0) {
 			g.drawImage(getTileImage(players.get(1).getRow(1).get(0)),167,277,35,35,null);
 		}
-		if (players.get(1).getRow(2).size() > 0) {
-			g.drawImage(getTileImage(players.get(1).getRow(2).get(0)),167,314,35,35,null);
-			if (players.get(1).getRow(2).size() > 1) {
-				g.drawImage(getTileImage(players.get(1).getRow(2).get(1)),129,314,35,35,null);
-			}
+		for (int a=0; a<players.get(1).getRow(2).size(); a++) {
+			g.drawImage(getTileImage(players.get(1).getRow(2).get(0)),166-38*a,314,35,35,null);
 		}
-		if (players.get(1).getRow(3).size() > 0) {
-			g.drawImage(getTileImage(players.get(1).getRow(3).get(0)),167,351,35,35,null);
-			if (players.get(1).getRow(3).size() > 1) {
-				g.drawImage(getTileImage(players.get(1).getRow(3).get(1)),129,351,35,35,null);
-				if (players.get(1).getRow(3).size() > 2) {
-					g.drawImage(getTileImage(players.get(1).getRow(3).get(2)),92,351,35,35,null);
-				}
-			}
+		for (int b=0; b<players.get(1).getRow(3).size(); b++) {
+			g.drawImage(getTileImage(players.get(1).getRow(3).get(0)),166-38*b,351,35,35,null);
 		}
-		if (players.get(1).getRow(4).size() > 0) {
-			g.drawImage(getTileImage(players.get(1).getRow(4).get(0)),167,388,35,35,null);
-			if (players.get(1).getRow(4).size() > 1) {
-				g.drawImage(getTileImage(players.get(1).getRow(4).get(0)),129,388,35,35,null);
-				if (players.get(1).getRow(4).size() > 2) {
-					g.drawImage(getTileImage(players.get(1).getRow(4).get(0)),92,388,35,35,null);
-					if (players.get(1).getRow(4).size() > 3) {
-						g.drawImage(getTileImage(players.get(1).getRow(4).get(0)),55,388,35,35,null);
-					}
-				}
-			}
+		for (int c=0; c<players.get(1).getRow(4).size(); c++) {
+			g.drawImage(getTileImage(players.get(1).getRow(4).get(0)),166-38*c,388,35,35,null);
 		}
-		if (players.get(1).getRow(5).size() > 0) {
-			g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),167,425,35,35,null);
-			if (players.get(1).getRow(5).size() > 1) {
-				g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),129,425,35,35,null);
-				if (players.get(1).getRow(5).size() > 2) {
-					g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),92,425,35,35,null);
-					if (players.get(1).getRow(5).size() > 3) {
-						g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),55,425,35,35,null);
-						if (players.get(1).getRow(5).size() > 4) {
-							g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),18,425,35,35,null);
-						}
-					}
-				}
-			}
+		for (int d=0; d<players.get(1).getRow(5).size(); d++) {
+			g.drawImage(getTileImage(players.get(1).getRow(5).get(0)),166-38*d,425,35,35,null);
 		}
 		
 		if (players.get(2).getRow(1).size() > 0) {
 			g.drawImage(getTileImage(players.get(2).getRow(1).get(0)),167+425,277,35,35,null);
 		}
-		if (players.get(2).getRow(2).size() > 0) {
-			g.drawImage(getTileImage(players.get(2).getRow(2).get(0)),167+425,314,35,35,null);
-			if (players.get(2).getRow(2).size() > 1) {
-				g.drawImage(getTileImage(players.get(2).getRow(2).get(1)),129+425,314,35,35,null);
-			}
+		for (int a=0; a<players.get(2).getRow(2).size(); a++) {
+			g.drawImage(getTileImage(players.get(2).getRow(2).get(0)),166+425-38*a,314,35,35,null);
 		}
-		if (players.get(2).getRow(3).size() > 0) {
-			g.drawImage(getTileImage(players.get(2).getRow(3).get(0)),167+425,351,35,35,null);
-			if (players.get(2).getRow(3).size() > 1) {
-				g.drawImage(getTileImage(players.get(2).getRow(3).get(1)),129+425,351,35,35,null);
-				if (players.get(2).getRow(3).size() > 2) {
-					g.drawImage(getTileImage(players.get(2).getRow(3).get(2)),92+425,351,35,35,null);
-				}
-			}
+		for (int b=0; b<players.get(2).getRow(3).size(); b++) {
+			g.drawImage(getTileImage(players.get(2).getRow(3).get(0)),166+425-38*b,351,35,35,null);
 		}
-		if (players.get(2).getRow(4).size() > 0) {
-			g.drawImage(getTileImage(players.get(2).getRow(4).get(0)),167+425,388,35,35,null);
-			if (players.get(2).getRow(4).size() > 1) {
-				g.drawImage(getTileImage(players.get(2).getRow(4).get(0)),129+425,388,35,35,null);
-				if (players.get(2).getRow(4).size() > 2) {
-					g.drawImage(getTileImage(players.get(2).getRow(4).get(0)),92+425,388,35,35,null);
-					if (players.get(2).getRow(4).size() > 3) {
-						g.drawImage(getTileImage(players.get(2).getRow(4).get(0)),55+425,388,35,35,null);
-					}
-				}
-			}
+		for (int c=0; c<players.get(2).getRow(4).size(); c++) {
+			g.drawImage(getTileImage(players.get(2).getRow(4).get(0)),166+425-38*c,388,35,35,null);
 		}
-		if (players.get(2).getRow(5).size() > 0) {
-			g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),167+425,425,35,35,null);
-			if (players.get(2).getRow(5).size() > 1) {
-				g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),129+425,425,35,35,null);
-				if (players.get(2).getRow(5).size() > 2) {
-					g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),92+425,425,35,35,null);
-					if (players.get(2).getRow(5).size() > 3) {
-						g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),55+425,425,35,35,null);
-						if (players.get(2).getRow(5).size() > 4) {
-							g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),18+425,425,35,35,null);
-						}
-					}
-				}
-			}
+		for (int d=0; d<players.get(2).getRow(5).size(); d++) {
+			g.drawImage(getTileImage(players.get(2).getRow(5).get(0)),166+425-38*d,425,35,35,null);
 		}
-		if (players.get(1).getExtraTiles().size() > 0) {
-			g.drawImage(getTileImage(players.get(1).getExtraTiles().get(0)),17,493,33,33,null);
-			if (players.get(1).getExtraTiles().size() > 1) {
-				g.drawImage(getTileImage(players.get(1).getExtraTiles().get(1)),57,493,33,33,null);
-				if (players.get(1).getExtraTiles().size() > 2) {
-					g.drawImage(getTileImage(players.get(1).getExtraTiles().get(2)),97,493,33,33,null);
-					if (players.get(1).getExtraTiles().size() > 3) {
-						g.drawImage(getTileImage(players.get(1).getExtraTiles().get(3)),137,493,33,33,null);
-						if (players.get(1).getExtraTiles().size() > 4) {
-							g.drawImage(getTileImage(players.get(1).getExtraTiles().get(4)),177,493,33,33,null);
-				
-						}
-					}
-				}
-			}
+		for (int e=0; e<players.get(1).getExtraTiles().size(); e++) {
+			g.drawImage(getTileImage(players.get(1).getExtraTiles().get(e)),17+e*40,493,33,33,null);
 		}
-		if (players.get(2).getExtraTiles().size() > 0) {
-			g.drawImage(getTileImage(players.get(2).getExtraTiles().get(0)),17,493,33,33,null);
-			if (players.get(2).getExtraTiles().size() > 1) {
-				g.drawImage(getTileImage(players.get(2).getExtraTiles().get(1)),57+425,493,33,33,null);
-				if (players.get(2).getExtraTiles().size() > 2) {
-					g.drawImage(getTileImage(players.get(2).getExtraTiles().get(2)),97+425,493,33,33,null);
-					if (players.get(2).getExtraTiles().size() > 3) {
-						g.drawImage(getTileImage(players.get(2).getExtraTiles().get(3)),136+425,493,33,33,null);
-						if (players.get(2).getExtraTiles().size() > 4) {
-							g.drawImage(getTileImage(players.get(2).getExtraTiles().get(4)),177+425,493,33,33,null);
-				
-						}
-					}
-				}
-			}
+		for (int f=0; f<players.get(2).getExtraTiles().size(); f++) {
+			g.drawImage(getTileImage(players.get(2).getExtraTiles().get(f)),17+425+40*f,493,33,33,null);
 		}
-		
-		if (players.get(3).getExtraTiles().size() > 0) {
-			g.drawImage(getTileImage(players.get(3).getExtraTiles().get(0)),17+425+425,493,33,33,null);
-			if (players.get(3).getExtraTiles().size() > 1) {
-				g.drawImage(getTileImage(players.get(3).getExtraTiles().get(1)),57+425+425,493,33,33,null);
-				if (players.get(3).getExtraTiles().size() > 2) {
-					g.drawImage(getTileImage(players.get(3).getExtraTiles().get(2)),97+425+425,493,33,33,null);
-					if (players.get(3).getExtraTiles().size() > 3) {
-						g.drawImage(getTileImage(players.get(3).getExtraTiles().get(3)),137+425+425,493,33,33,null);
-						if (players.get(3).getExtraTiles().size() > 4) {
-							g.drawImage(getTileImage(players.get(3).getExtraTiles().get(4)),177+425+425,493,33,33,null);
-				
-						}
-					}
-				}
-			}
+		for (int h=0; h<players.get(3).getExtraTiles().size(); h++) {
+			g.drawImage(getTileImage(players.get(3).getExtraTiles().get(h)),17+425+425+40*h,493,33,33,null);
 		}
-		
-		
-		
-	}
-	
-	public void drawScoreRow1(Graphics g) {
-		
-	}
-	
-	public void drawClickToContinue(Graphics g) {
-		drawBoard(g);
 		g.setColor(Color.BLACK);
-		g.setColor(new Color(255,255,255,127));
-		g.fillRect(280,0,200,69);
-		g.setColor(Color.BLACK);
-		g.drawRect(280, 0, 200, 69);
-		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
-		g.drawString("CONTINUE", 285, 50); // end button
-		g.drawString("CLICK THE CONTINUE BUTTON", 650, 65);
-		if(AL.getCurrentRow() != 6) {
-			g.drawString("TO SCORE ROW " + AL.getCurrentRow(), 690, 130);
-		} else {
-			g.drawString("TO SCORE THE NEXT PLAYER", 640, 130);
+		
+		if (players.get(1).getScore() <= 20 && players.get(1).getScore() >= 1) {
+			g.fillOval(23+20*(players.get(1).getScore()-1), 153, 10, 10);
+		} else if (players.get(1).getScore() > 20 && players.get(1).getScore() <=40) {
+			g.fillOval(23+20*(players.get(1).getScore()-1), 175, 10, 10);
+		} else if (players.get(1).getScore() == 0) {
+			g.fillOval(23,134,10,10);
+		} else if (players.get(1).getScore() > 40 && players.get(1).getScore() <=60) {
+			g.fillOval(23+20*(players.get(1).getScore()-1), 197, 10, 10);
+		} else if (players.get(1).getScore() > 60 && players.get(1).getScore() <=80) {
+			g.fillOval(23+20*(players.get(1).getScore()-1), 219, 10, 10);
+		} else if (players.get(1).getScore() > 80 && players.get(1).getScore() <=100) {
+			g.fillOval(23+20*(players.get(1).getScore()-1), 241, 10, 10);
 		}
+		
+		if (players.get(2).getScore() <= 20 && players.get(2).getScore() >= 1) {
+			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 153, 10, 10);
+		} else if (players.get(2).getScore() > 20 && players.get(2).getScore() <=40) {
+			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 175, 10, 10);
+		} else if (players.get(2).getScore() == 0) {
+			g.fillOval(23+425,134,10,10);
+		} else if (players.get(2).getScore() > 40 && players.get(2).getScore() <=60) {
+			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 197, 10, 10);
+		} else if (players.get(2).getScore() > 60 && players.get(2).getScore() <=80) {
+			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 219, 10, 10);
+		} else if (players.get(2).getScore() > 80 && players.get(2).getScore() <=100) {
+			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 241, 10, 10);
+		}
+		
+		if (players.get(3).getScore() <= 20 && players.get(3).getScore() >= 1) {
+			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 153, 10, 10);
+		} else if (players.get(3).getScore() > 20 && players.get(3).getScore() <=40) {
+			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 175, 10, 10);
+		} else if (players.get(3).getScore() == 0) {
+			g.fillOval(23+425+425,134,10,10);
+		} else if (players.get(3).getScore() > 40 && players.get(3).getScore() <=60) {
+			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 197, 10, 10);
+		} else if (players.get(3).getScore() > 60 && players.get(3).getScore() <=80) {
+			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 219, 10, 10);
+		} else if (players.get(3).getScore() > 80 && players.get(3).getScore() <=100) {
+			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 241, 10, 10);
+		}
+
+		drawOtherWalls(g);
+		
 	}
 	
+	public void drawOtherWalls(Graphics g) {
+		boolean[][] wall = players.get(1).getWall();
+		for (int r=0; r<5; r++) {
+			for (int c=0; c<5; c++) {
+				if (wall[r][c]) {
+					if (((r==0)&&(c==0)) || ((r==1)&&(c==1)) || ((r==2)&&(c==2)) || ((r==3)&&(c==3)) || ((r==4)&&(c==4))) {
+						g.drawImage(cyanTile, 223+37*c, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==1)) || ((r==1) && (c==2)) || ((r==2) && (c==3)) || ((r==3) && (c==4)) || ((r==4) && (c==0))) {
+						g.drawImage(orangeTile, 223+37*c, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==2)) || ((r==1) && (c==3)) || ((r==2) && (c==4)) || ((r==3) && (c==0)) || ((r==4) && (c==1))) {
+						g.drawImage(redTile, 223+37*c, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==3)) || ((r==1) && (c==4)) || ((r==2) && (c==0)) || ((r==3) && (c==1)) || ((r==4) && (c==2))) {
+						g.drawImage(blackTile, 223+37*c, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==4)) || ((r==1) && (c==0)) || ((r==2) && (c==1)) || ((r==3) && (c==2)) || ((r==4) && (c==3))) {
+						g.drawImage(iceTile, 223+37*c, 279+37*r, 33,33,null);
+					}
+				}
+			}
+		}
+		wall = players.get(2).getWall();
+		for (int r=0; r<5; r++) {
+			for (int c=0; c<5; c++) {
+				if (wall[r][c]) {
+					if (((r==0)&&(c==0)) || ((r==1)&&(c==1)) || ((r==2)&&(c==2)) || ((r==3)&&(c==3)) || ((r==4)&&(c==4))) {
+						g.drawImage(cyanTile, 223+37*c+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==1)) || ((r==1) && (c==2)) || ((r==2) && (c==3)) || ((r==3) && (c==4)) || ((r==4) && (c==0))) {
+						g.drawImage(orangeTile, 223+37*c+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==2)) || ((r==1) && (c==3)) || ((r==2) && (c==4)) || ((r==3) && (c==0)) || ((r==4) && (c==1))) {
+						g.drawImage(redTile, 223+37*c+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==3)) || ((r==1) && (c==4)) || ((r==2) && (c==0)) || ((r==3) && (c==1)) || ((r==4) && (c==2))) {
+						g.drawImage(blackTile, 223+37*c+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==4)) || ((r==1) && (c==0)) || ((r==2) && (c==1)) || ((r==3) && (c==2)) || ((r==4) && (c==3))) {
+						g.drawImage(iceTile, 223+37*c+425, 279+37*r, 33,33,null);
+					}
+				}
+			}
+		}
+		wall = players.get(2).getWall();
+		for (int r=0; r<5; r++) {
+			for (int c=0; c<5; c++) {
+				if (wall[r][c]) {
+					if (((r==0)&&(c==0)) || ((r==1)&&(c==1)) || ((r==2)&&(c==2)) || ((r==3)&&(c==3)) || ((r==4)&&(c==4))) {
+						g.drawImage(cyanTile, 223+37*c+425+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==1)) || ((r==1) && (c==2)) || ((r==2) && (c==3)) || ((r==3) && (c==4)) || ((r==4) && (c==0))) {
+						g.drawImage(orangeTile, 223+37*c+425+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==2)) || ((r==1) && (c==3)) || ((r==2) && (c==4)) || ((r==3) && (c==0)) || ((r==4) && (c==1))) {
+						g.drawImage(redTile, 223+37*c+425+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==3)) || ((r==1) && (c==4)) || ((r==2) && (c==0)) || ((r==3) && (c==1)) || ((r==4) && (c==2))) {
+						g.drawImage(blackTile, 223+37*c+425+425, 279+37*r, 33,33,null);
+					} else if (((r==0) && (c==4)) || ((r==1) && (c==0)) || ((r==2) && (c==1)) || ((r==3) && (c==2)) || ((r==4) && (c==3))) {
+						g.drawImage(iceTile, 223+37*c+425+425, 279+37*r, 33,33,null);
+					}
+				}
+			}
+		}
+	}
+
 	public void drawWall(Graphics g) {
 		boolean[][] wall = players.get(0).getWall();
 		for (int r=0; r<5; r++) {
@@ -868,6 +821,62 @@ public class AzulPanel extends JPanel implements MouseListener {
 				}
 			}
 		}
+	}
+	
+	public void drawClickToContinue(Graphics g) {
+		drawBoard(g);
+		g.setColor(Color.BLACK);
+		g.setColor(new Color(255,255,255,127));
+		g.fillRect(280,0,200,69);
+		g.setColor(Color.BLACK);
+		g.drawRect(280, 0, 200, 69);
+		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.drawString("CONTINUE", 285, 50); // end button
+		g.drawString("CLICK THE CONTINUE BUTTON", 650, 65);
+		if (AL.getCurrentRow() == 8) {
+			g.drawString("TO BEGIN THE NEXT ROUND", 690, 130);
+		} else {
+			if(AL.getCurrentRow() != 6 && AL.getCurrentRow() != 7) {
+				g.drawString("TO SCORE ROW " + AL.getCurrentRow(), 690, 130);
+			} else if (AL.getCurrentRow() == 7) {
+				g.drawString("TO SCORE THE NEXT PLAYER", 640, 130);
+			} else if (AL.getCurrentRow() == 6) {
+				g.drawString("TO CLEAR FLOOR LINE", 690, 130);
+			}
+		}
+	}
+	
+	public void drawViewBag(Graphics g) {
+		g.drawImage(bag2, 326,13, 624, 624, null);
+		
+		g.drawImage(blackTile,512,139,80,80,null);
+		g.drawImage(cyanTile,512,139+85,80,80,null);
+		g.drawImage(iceTile,512,139+85+85,80,80,null);
+		g.drawImage(orangeTile,512,139+85+85+85,80,80,null);
+		g.drawImage(redTile,512,139+85+85+85+85,80,80,null);
+		g.setColor(new Color(255,255,255,127));
+		g.fillRect(501, 2, 280, 56);
+		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.setColor(Color.BLACK);
+		g.drawString("x" + AL.getColorCntBag(0), 512+85, 139+50);
+		g.drawString("x" + AL.getColorCntBag(1), 512+85, 139+85+50);
+		g.drawString("x" + AL.getColorCntBag(2), 512+85, 139+85+85+50);
+		g.drawString("x" + AL.getColorCntBag(3), 512+85, 139+85+85+85+50);
+		g.drawString("x" + AL.getColorCntBag(4), 512+85, 139+85+85+85+85+50);
+		g.drawRect(501, 2, 280, 56);		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 45)); 
+		g.drawString("BACK", 586, 40);
+	}
+	
+	public void drawHome(Graphics g) {
+		g.drawImage(wallPaper, 0, 0,getWidth(), getHeight(), null);
+		g.setColor(new Color(0,100,100,127));
+		g.fillRect(0, 0,getWidth(), getHeight());
+		g.setColor(Color.BLACK);
+		g.fillRect(326, 13, 636, 636);
+		g.drawImage(homeScreen, 338, 24,612, 612, null);
+		g.drawRect(458, 524, 370, 97);
 	}
 	
 	enum GameState {
@@ -892,7 +901,10 @@ public class AzulPanel extends JPanel implements MouseListener {
 		VIEWFACTORY6,
 		VIEWFACTORY7,
 		VIEWFACTORY8,
-		VIEWFACTORY9;
+		VIEWFACTORY9,
+		ADDBONUSES,
+		VIEWBAG,
+		OVER;
 	}
 	
 	public int getFactoryNum() {
