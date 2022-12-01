@@ -86,6 +86,7 @@ public class GameBoard {
 				if (!rowIsFull(row)) {
 					getRow(row).add(hand.remove(0));
 				} else {
+					System.out.println("REEE");
 					extraTiles.add(hand.remove(0));
 				}
 			}
@@ -97,6 +98,16 @@ public class GameBoard {
 			}
 
 		}
+	}
+	
+	public boolean ready() {
+		if (row1.size() == 1) return false;
+		if (row2.size() == 2) return false;
+		if (row3.size() == 3) return false;
+		if (row4.size() == 4) return false;
+		if (row5.size() == 5) return false;
+		if (extraTiles.size() > 0) return false;
+		return true;
 	}
 	
 	/* public void score() {
@@ -136,12 +147,24 @@ public class GameBoard {
 		return getRow(r).get(0);
 	}
 
+	public boolean checkWall() {
+		for (int i=0; i<5; i++) {
 
+			if (wall[i][0] && wall[i][1] && wall[i][2] && wall[i][3] && wall[i][4]) {
+				return true;
+			}
+
+		}
+		return false;
+	}
 
 	public void addToExtraTiles(int t) {
 		extraTiles.add(t);
 	}
 
+	public void setScore(int x) {
+		score = x;
+	}
 	
 	public String toString() {
 		return String.valueOf(playerID);
@@ -149,6 +172,34 @@ public class GameBoard {
 	
 	public ArrayList<Integer> getExtraTiles() {
 		return extraTiles;
+	}
+	
+	public void addBonuses() {
+		for (int i=0; i<5; i++) {
+			if (wall[i][0] && wall[i][1] && wall[i][2] && wall[i][3] && wall[i][4]) {
+				addScore(2);
+			}
+		}
+		for (int j=0; j<5; j++) {
+			if (wall[0][j] && wall[1][j] && wall[2][j] && wall[3][j] && wall[4][j]) {
+				addScore(7);
+			}
+		}
+		if (wall[0][0] && wall[1][1] && wall[2][2] && wall[3][3] && wall[4][4]) {
+			addScore(10);
+		}
+		if (wall[0][1] && wall[1][2] && wall[2][3] && wall[3][4] && wall[4][0]) {
+			addScore(10);
+		}
+		if (wall[0][2] && wall[1][3] && wall[2][4] && wall[3][0] && wall[4][1]) {
+			addScore(10);
+		}
+		if (wall[0][3] && wall[1][4] && wall[2][0] && wall[3][1] && wall[4][2]) {
+			addScore(10);
+		}
+		if (wall[0][4] && wall[1][0] && wall[2][1] && wall[3][2] && wall[4][3]) {
+			addScore(10);
+		}
 	}
 	
 	public boolean[][] getWall() {
