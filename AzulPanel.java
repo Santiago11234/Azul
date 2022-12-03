@@ -51,7 +51,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		// super.paint(g);
 
 		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
-		g.setColor(new Color(255,255,255,127));
+		g.setColor(new Color(0,0,0,127));
 		
 		if (gs == GameState.PLAY) {						
 			drawPlay(g);

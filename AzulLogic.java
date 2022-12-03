@@ -198,6 +198,8 @@ public class AzulLogic {
 			}
 		}
 
+
+		System.out.print(discard);
 	}
 	
 	public int scoreRow(int x, int y) {
@@ -383,7 +385,7 @@ public class AzulLogic {
 		Collections.shuffle(bagOfTiles);
 		for (int k=0; k<4; k++) {
 			for (int i=0; i<9; i++) {
-				if (bagOfTiles.size() == 0) {
+				if (bagOfTiles.size() < 4 ) {
 					refillBag();
 					Collections.shuffle(bagOfTiles);
 				} 
