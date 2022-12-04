@@ -55,7 +55,7 @@ public class AzulLogic {
 		int t = row.get(0);
 		
 		for (int c=0; c<row.size()-1; c++) {
-			discard.add(t);
+			bagOfTiles.add(t);
 		}
 		
 		int r = players.get(0).getIntRow(row);
@@ -199,7 +199,7 @@ public class AzulLogic {
 		}
 
 
-		System.out.print(discard);
+		
 	}
 	
 	public int scoreRow(int x, int y) {
@@ -376,19 +376,22 @@ public class AzulLogic {
 	
 	
 	public void refillBag() {
-		for (int i=0; i<discard.size(); i++) {
+		for (int i=0; i<discard.size()-1; i++) {
 			bagOfTiles.add(discard.remove(0));
 		}
+		System.out.println("new bag: " + bagOfTiles);
 	}
 	
 	public void fillFactories() {
 		Collections.shuffle(bagOfTiles);
+
 		for (int k=0; k<4; k++) {
 			for (int i=0; i<9; i++) {
-				if (bagOfTiles.size() < 4 ) {
-					refillBag();
+				if (bagOfTiles.size() < 5 ) {
+					fillBag();
 					Collections.shuffle(bagOfTiles);
 				} 
+				System.out.println(bagOfTiles);
 				factories.get(i).getFactoryTiles().add(bagOfTiles.remove(0));
 			}
 		}
