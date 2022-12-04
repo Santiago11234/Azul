@@ -51,6 +51,7 @@ public class AzulLogic {
 		
 	}
 	
+
 	public void addTileToWall(ArrayList<Integer> row) {
 		int t = row.get(0);
 		
@@ -65,6 +66,7 @@ public class AzulLogic {
 			if (t==0) {
 				if (!players.get(0).getWall()[0][3]) {
 					players.get(0).getWall()[0][3] = true;
+
 					scoreRow(0,3);
 				}
 			} else if (t==1) {
@@ -202,6 +204,10 @@ public class AzulLogic {
 		
 	}
 	
+
+	public boolean rowColorAlreadyPlaced(int row, int color) {
+		return true;
+	}
 	public int scoreRow(int x, int y) {
 		int s = 1;
 
@@ -373,7 +379,7 @@ public class AzulLogic {
 		
 		
 	}
-	
+
 	
 	public void refillBag() {
 		for (int i=0; i<discard.size()-1; i++) {

@@ -34,7 +34,8 @@ public class GameBoard {
 	public boolean canPlaceTileInRow(int r) {
 
 		if (getRow(r).size() > 0) {
-			if (hand.get(0) != getRow(r).get(0)) return false;
+			if(getRow(r) == null) return false;
+			if (hand.get(0) != getRow(r).get(0) || rowIsFull(r)) return false;
 		}
 		return true;
 	}
@@ -83,7 +84,7 @@ public class GameBoard {
 		} else if (hand.size() + getRow(row).size() > row) {
 			int k = hand.size();
 			for (int i=0; i<k; i++) {
-				if (!rowIsFull(row)) {
+				if (!rowIsFull(row) ) {
 					getRow(row).add(hand.remove(0));
 				} else {
 					System.out.println("REEE");
