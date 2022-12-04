@@ -376,6 +376,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g2d.drawString("Factory " + this.getFactoryNum(), -612, 1000);
 		g2d.setTransform(defaultAt);
 		
+		//here
 		g.setColor(new Color(255,0,0,127));
 		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(0))  {
 			g.fillRect(645, 555, 106, 65);
