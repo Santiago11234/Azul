@@ -467,15 +467,230 @@ public class AzulLogic {
 		max = Math.max(max, s4);
 		if (max == s1) {
 			winner.add(players.get(0).getPlayerID());
+			winner.add(players.get(0).getScore());
+			max = Math.max(s2, s3);
+			max = Math.max(max, s4);
+			if (max == s2) {
+				winner.add(players.get(1).getPlayerID());
+				winner.add(players.get(1).getScore());
+				max = Math.max(s3, s4);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
+			if (max == s3) {
+				winner.add(players.get(2).getPlayerID());
+				winner.add(players.get(2).getScore());
+				max = Math.max(s2, s4);
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+				}
+			}
+			if (max == s4) {
+				winner.add(players.get(3).getPlayerID());
+				winner.add(players.get(3).getScore());
+				max = Math.max(s2, s3);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+				}
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
 		}
 		if (max == s2) {
 			winner.add(players.get(1).getPlayerID());
+			winner.add(players.get(1).getScore());
+			max = Math.max(s1, s3);
+			max = Math.max(max, s4);
+			if (max == s1) {
+				winner.add(players.get(0).getPlayerID());
+				winner.add(players.get(0).getScore());
+				max = Math.max(s3, s4);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
+			if (max == s3) {
+				winner.add(players.get(2).getPlayerID());
+				winner.add(players.get(2).getScore());
+				max = Math.max(s1, s4);
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+			}
+			if (max == s4) {
+				winner.add(players.get(3).getPlayerID());
+				winner.add(players.get(3).getScore());
+				max = Math.max(s1, s3);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
 		}
 		if (max == s3) {
 			winner.add(players.get(2).getPlayerID());
+			winner.add(players.get(2).getScore());
+			max = Math.max(s2, s1);
+			max = Math.max(max, s4);
+			if (max == s2) {
+				winner.add(players.get(1).getPlayerID());
+				winner.add(players.get(1).getScore());
+				max = Math.max(s1, s4);
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+			}
+			if (max == s1) {
+				winner.add(players.get(0).getPlayerID());
+				winner.add(players.get(0).getScore());
+				max = Math.max(s2, s4);
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(3).getScore());
+				}
+				if (max == s4) {
+					winner.add(players.get(3).getPlayerID());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(3).getScore());
+				}
+			}
+			if (max == s4) {
+				winner.add(players.get(3).getPlayerID());
+				winner.add(players.get(3).getScore());
+				max = Math.max(s2, s1);
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+				}
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+			}
 		}
 		if (max == s4) {
 			winner.add(players.get(3).getPlayerID());
+			winner.add(players.get(3).getScore());
+			max = Math.max(s2, s3);
+			max = Math.max(max, s1);
+			if (max == s2) {
+				winner.add(players.get(1).getPlayerID());
+				winner.add(players.get(1).getScore());
+				max = Math.max(s3, s1);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
+			if (max == s3) {
+				winner.add(players.get(2).getPlayerID());
+				max = Math.max(s2, s1);
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+				}
+				if (max == s1) {
+					winner.add(players.get(0).getPlayerID());
+					winner.add(players.get(0).getScore());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+				}
+			}
+			if (max == s1) {
+				winner.add(players.get(0).getPlayerID());
+				winner.add(players.get(0).getScore());
+				max = Math.max(s2, s3);
+				if (max == s3) {
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+				}
+				if (max == s2) {
+					winner.add(players.get(1).getPlayerID());
+					winner.add(players.get(1).getScore());
+					winner.add(players.get(2).getPlayerID());
+					winner.add(players.get(2).getScore());
+				}
+			}
 		}
 	}
 	
