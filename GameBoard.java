@@ -31,14 +31,36 @@ public class GameBoard {
 		hand = new ArrayList<Integer>();
 	}
 	
-	public boolean canPlaceTileInRow(int r) {
-
+		//0=black 1=cyan 2=red. 3=orange. 4= ive
+	public boolean canPlaceTileInRow(int r, int tile) {
+		int t = 0;
+		if(tile == 0) {
+			t = 3;
+		} 
+		else if(tile == 1) {
+			t = 0;
+		}  
+		else if(tile == 2) {
+			t = 4;
+		} 
+		else if(tile == 3) {
+			t = 1;
+		}
+		else if(tile == 4) {
+			t = 2;
+		}
+		int coll = (t + r-1) % 5;
+		
+		if(wall[r-1][coll]) return false;
 		if (getRow(r).size() > 0) {
-			if(getRow(r) == null) return false;
 			if (hand.get(0) != getRow(r).get(0) || rowIsFull(r)) return false;
 		}
+		
+
 		return true;
 	}
+
+	
 	
 	public ArrayList<Integer> getHand() {
 		return hand;
@@ -84,7 +106,7 @@ public class GameBoard {
 		} else if (hand.size() + getRow(row).size() > row) {
 			int k = hand.size();
 			for (int i=0; i<k; i++) {
-				if (!rowIsFull(row) ) {
+				if (!rowIsFull(row) || canPlaceTileInRow(row, hand.get(0)) ) {
 					getRow(row).add(hand.remove(0));
 				} else {
 					System.out.println("REEE");

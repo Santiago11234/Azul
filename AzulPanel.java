@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 public class AzulPanel extends JPanel implements MouseListener {
 
 	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground, homeScreen, wallPaper, bag, bag2;
-	private GameState gs = GameState.HOME;
+	private GameState gs = GameState.OVER;
 	private AzulLogic AL;
 	private ArrayList<Factory> factories;
 	private ArrayList<GameBoard> players;
@@ -73,7 +73,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0,getWidth(), getHeight());
 			g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-			g.drawString("PLAYER[s] " + AL.getWinner() + " WINS THE GAME!", 100, 100);
+			g.setColor(Color.BLACK);
+			g.drawString("VIEW", 100, 100);
 		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		}
@@ -164,22 +165,23 @@ public class AzulPanel extends JPanel implements MouseListener {
 			if (x>= 557 && x<= 1267 && y>= 130 && y<=250) {
 
 				if (x>=556 && x< 556 + 142) {
-					if (!players.get(0).canPlaceTileInRow(1)) return;
+					if (!players.get(0).canPlaceTileInRow(1, players.get(0).getHand().get(0))) return;
 					players.get(0).addTilesToRow(1);
 				} else if (x>=556+142 && x< 556+142+142) {
-					if (!players.get(0).canPlaceTileInRow(2)) return;
+					if (!players.get(0).canPlaceTileInRow(2, players.get(0).getHand().get(0))) return;
 					players.get(0).addTilesToRow(2);
 				} else if (x>=556+142+142 && x< 556+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(3)) return;
+					if (!players.get(0).canPlaceTileInRow(3, players.get(0).getHand().get(0))) return;
 					players.get(0).addTilesToRow(3);
 				} else if (x>=556+142+142+142 && x< 556+142+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(4)) return;
+					if (!players.get(0).canPlaceTileInRow(4, players.get(0).getHand().get(0))) return;
 					players.get(0).addTilesToRow(4);
 				} else if (x>=556+142+142+142+142 && x< 556+142+142+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(5)) return;
+					if (!players.get(0).canPlaceTileInRow(5, players.get(0).getHand().get(0))) return;
 					players.get(0).addTilesToRow(5);
 				}
 				
+
 				gs = GameState.ENDTURN;
 				
 			}
@@ -378,7 +380,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		
 		//here
 		g.setColor(new Color(255,0,0,127));
-		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(0))  {
+		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(0) )  {
 			g.fillRect(645, 555, 106, 65);
 		}
 		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(1)) {
@@ -499,19 +501,21 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("th", 596+142+142+142+30, 182);
 		g.drawString("th", 596+142+142+142+142+30, 182);
 		g.setColor(new Color(255,0,0,127));
-		if (!players.get(0).canPlaceTileInRow(1)) {
+
+		System.out.println(players.get(0).getHand().get(0));
+		if (!players.get(0).canPlaceTileInRow(1, players.get(0).getHand().get(0))) {
 			g.fillRect(557,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(2)) {
+		if (!players.get(0).canPlaceTileInRow(2, players.get(0).getHand().get(0))) {
 			g.fillRect(557+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(3)) {
+		if (!players.get(0).canPlaceTileInRow(3, players.get(0).getHand().get(0))) {
 			g.fillRect(557+142+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(4)) {
+		if (!players.get(0).canPlaceTileInRow(4, players.get(0).getHand().get(0))) {
 			g.fillRect(557+142+142+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(5)) {
+		if (!players.get(0).canPlaceTileInRow(5, players.get(0).getHand().get(0))) {
 			g.fillRect(557+142+142+142+142,131,141,119);
 		}
 		g.setColor(Color.BLACK);
