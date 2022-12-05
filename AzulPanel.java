@@ -70,12 +70,20 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.HOME) {
 			drawHome(g);
 		} else if (gs == GameState.OVER) {
-			g.setColor(Color.WHITE);
-			g.fillRect(0, 0,getWidth(), getHeight());
-			g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-			g.setColor(Color.BLACK);
-			g.drawString("VIEW", 100, 100);
-		} else if (gs == GameState.VIEWBAG) {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0,getWidth(), getHeight());
+            System.out.print("White");
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+            int i= 0;
+            int c=1;
+            while(i < AL.getWinner().size()) {
+                g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
+                i=i+2;
+                c++;
+                System.out.println("loop");
+                }
+        }else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		}
 	}

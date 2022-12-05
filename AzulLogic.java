@@ -710,3 +710,5 @@ public class AzulLogic {
 		return bagOfTiles;
 	}
 }
+
+
