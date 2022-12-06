@@ -133,6 +133,13 @@ public class GameBoard {
 		return true;
 	}
 	
+	public void eatIt() {
+		int k = hand.size();
+		for (int i=0; i<k; i++) {
+			extraTiles.add(hand.remove(0));
+		}
+	}
+	
 	public void addTilesToRow(int row) {
 		
 		if (hand.contains(5)) {
