@@ -296,6 +296,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					Collections.rotate(players,3);
 				} else if (AL.getCurrentRow() == 8) {
 					if (AL.checkWall() == true) {
+						//this is where i think the bonuses is
 						AL.addBonuses();
 						if (AL.getBonusCnt() == 4) {
 							AL.findWinner();
@@ -333,14 +334,32 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("VIEW", 95, 50); // view button
 		// FACTORIES 
 		g.drawImage(factory,735,0,140,140,null); // FACTORY 1, INCREASES BY GOING CLOCKWISE;
+		drawTilesForOutsideFacts(g,755,20, 1);
+
 		g.drawImage(factory,955,0,140,140,null);
+		drawTilesForOutsideFacts(g,975,20, 2);
+
 		g.drawImage(factory,590,130,140,140,null);
+		drawTilesForOutsideFacts(g,610,150, 3);
+
 		g.drawImage(factory,1110,130,140,140,null);
+		drawTilesForOutsideFacts(g,1130,150, 4);
+		
 		g.drawImage(factory,550,305,140,140,null);
+		drawTilesForOutsideFacts(g,570,325, 5);
+
 		g.drawImage(factory,1120,305,140,140,null);
-		g.drawImage(factory,650,465,140,140,null);			
+		drawTilesForOutsideFacts(g,1140,325, 6);
+
+		g.drawImage(factory,650,465,140,140,null);	
+		drawTilesForOutsideFacts(g,670,485, 7);
+
 		g.drawImage(factory,1030,465,140,140,null);
-		g.drawImage(factory,845,510,140,140,null);		
+		drawTilesForOutsideFacts(g,1050,485, 8);
+
+		g.drawImage(factory,845,510,140,140,null);	
+		drawTilesForOutsideFacts(g,865,530, 9);
+
 		g.setColor(new Color(255,0,0,127));		
 		g.fillOval(780, 190, 260, 260);
 		g.setColor(new Color(0,0,0,255));
@@ -387,6 +406,20 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 	}
 
+	public void drawTilesForOutsideFacts(Graphics g, int x, int y, int factoryNum) {
+		if(factories.get(factoryNum-1).getFactoryTiles().size()>0) {
+			g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(0)),x,y,45,45,null);
+			if(factories.get(factoryNum-1).getFactoryTiles().size()>1) {
+				g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(1)),x+50,y,45,45,null);
+				if (factories.get(factoryNum-1).getFactoryTiles().size()>2) {
+					g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(2)),x+50,y+50,45,45,null);
+					if (factories.get(factoryNum-1).getFactoryTiles().size()>3) {
+						g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(3)),x,y+50,45,45,null);
+					}
+				}
+			}
+		}
+	}
 	public void drawViewingFactory(Graphics g) {
 		drawBoard(g);
 		g.drawImage(factory,700,90,450,450,null);
@@ -408,6 +441,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 				}
 			}
 		}
+		
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(645, 555, 540, 65);
 		g.setColor(new Color(0,100,255,255));
