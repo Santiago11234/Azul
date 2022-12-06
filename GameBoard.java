@@ -136,7 +136,6 @@ public class GameBoard {
 	public void eatIt() {
 		int k = hand.size();
 		for (int i=0; i<k; i++) {
-
 			extraTiles.add(hand.remove(0));
 		}
 	}
