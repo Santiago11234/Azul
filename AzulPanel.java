@@ -48,7 +48,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 	}
 	
 	public void paint(Graphics g) {
-		// super.paint(g);
+		super.paint(g);
 
 		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(255,255,255,127));
@@ -86,6 +86,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 	        
 		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
+		} else if (gs == GameState.VIEWDISCARD)  {
+			drawViewDiscard(g);
 		}
 	}
 
@@ -120,6 +122,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 				gs = GameState.VIEWOTHERGAMEBOARDS;
 			} else if (x>=1130 && x<= 1280 && y>=-10 && y<=140) { // g.drawImage(bag,1130,-10,150,150,null);
 				gs = GameState.VIEWBAG;
+			} else if (x>=223 && x<=500 && y>=0 && y<=69) { // g.drawRect(223,0,277,69);
+				gs = GameState.VIEWDISCARD;
 			}
 		} else if (isViewingFactory()) {
 			if (x>=804 && x<=1044 && y>=12 && y<=86) {
@@ -296,7 +300,6 @@ public class AzulPanel extends JPanel implements MouseListener {
 					Collections.rotate(players,3);
 				} else if (AL.getCurrentRow() == 8) {
 					if (AL.checkWall() == true) {
-						//this is where i think the bonuses is
 						AL.addBonuses();
 						if (AL.getBonusCnt() == 4) {
 							AL.findWinner();
@@ -319,6 +322,10 @@ public class AzulPanel extends JPanel implements MouseListener {
 			if (x>=501 && x<= 781 && y>=2 && y<= 58) {
 				gs = GameState.PLAY;
 			}				
+		} else if (gs == GameState.VIEWDISCARD) {
+			if (x>=501 && x<= 781 && y>=2 && y<= 58) {
+				gs = GameState.PLAY;
+			}
 		}
 		repaint();
 	}
@@ -406,20 +413,6 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 	}
 
-	public void drawTilesForOutsideFacts(Graphics g, int x, int y, int factoryNum) {
-		if(factories.get(factoryNum-1).getFactoryTiles().size()>0) {
-			g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(0)),x,y,45,45,null);
-			if(factories.get(factoryNum-1).getFactoryTiles().size()>1) {
-				g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(1)),x+50,y,45,45,null);
-				if (factories.get(factoryNum-1).getFactoryTiles().size()>2) {
-					g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(2)),x+50,y+50,45,45,null);
-					if (factories.get(factoryNum-1).getFactoryTiles().size()>3) {
-						g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(3)),x,y+50,45,45,null);
-					}
-				}
-			}
-		}
-	}
 	public void drawViewingFactory(Graphics g) {
 		drawBoard(g);
 		g.drawImage(factory,700,90,450,450,null);
@@ -441,14 +434,13 @@ public class AzulPanel extends JPanel implements MouseListener {
 				}
 			}
 		}
-
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(645, 555, 540, 65);
 		g.setColor(new Color(0,100,255,255));
 		g.fillRect(573, 510, 70, 140);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 40));
-		g.drawString("T", 590, 540);
+		g.drawString("T", 590, 540);		
 		g.drawString("A", 590, 570);
 		g.drawString("K", 590, 605);
 		g.drawString("E", 590, 640);
@@ -805,45 +797,45 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 		
 		if (players.get(1).getScore() <= 20 && players.get(1).getScore() >= 1) {
-			g.fillOval(23+20*(players.get(1).getScore()-1), 153, 10, 10);
+			g.fillOval(23+19*(players.get(1).getScore()-1), 153, 10, 10);
 		} else if (players.get(1).getScore() > 20 && players.get(1).getScore() <=40) {
-			g.fillOval(23+20*(players.get(1).getScore()-21), 175, 10, 10);
+			g.fillOval(23+19*(players.get(1).getScore()-21), 175, 10, 10);
 		} else if (players.get(1).getScore() == 0) {
 			g.fillOval(23,134,10,10);
 		} else if (players.get(1).getScore() > 40 && players.get(1).getScore() <=60) {
-			g.fillOval(23+20*(players.get(1).getScore()-41), 197, 10, 10);
+			g.fillOval(23+19*(players.get(1).getScore()-41), 197, 10, 10);
 		} else if (players.get(1).getScore() > 60 && players.get(1).getScore() <=80) {
-			g.fillOval(23+20*(players.get(1).getScore()-61), 219, 10, 10);
+			g.fillOval(23+19*(players.get(1).getScore()-61), 219, 10, 10);
 		} else if (players.get(1).getScore() > 80 && players.get(1).getScore() <=100) {
-			g.fillOval(23+20*(players.get(1).getScore()-81), 241, 10, 10);
+			g.fillOval(23+19*(players.get(1).getScore()-81), 241, 10, 10);
 		}
 		
 		if (players.get(2).getScore() <= 20 && players.get(2).getScore() >= 1) {
-			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 153, 10, 10);
+			g.fillOval(23+19*(players.get(2).getScore()-1)+425, 153, 10, 10);
 		} else if (players.get(2).getScore() > 20 && players.get(2).getScore() <=40) {
-			g.fillOval(23+20*(players.get(2).getScore()-21)+425, 175, 10, 10);
+			g.fillOval(23+19*(players.get(2).getScore()-21)+425, 175, 10, 10);
 		} else if (players.get(2).getScore() == 0) {
 			g.fillOval(23+425,134,10,10);
 		} else if (players.get(2).getScore() > 40 && players.get(2).getScore() <=60) {
-			g.fillOval(23+20*(players.get(2).getScore()-41)+425, 197, 10, 10);
+			g.fillOval(23+19*(players.get(2).getScore()-41)+425, 197, 10, 10);
 		} else if (players.get(2).getScore() > 60 && players.get(2).getScore() <=80) {
-			g.fillOval(23+20*(players.get(2).getScore()-61)+425, 219, 10, 10);
+			g.fillOval(23+19*(players.get(2).getScore()-61)+425, 219, 10, 10);
 		} else if (players.get(2).getScore() > 80 && players.get(2).getScore() <=100) {
-			g.fillOval(23+20*(players.get(2).getScore()-81)+425, 241, 10, 10);
+			g.fillOval(23+19*(players.get(2).getScore()-81)+425, 241, 10, 10);
 		}
 		
 		if (players.get(3).getScore() <= 20 && players.get(3).getScore() >= 1) {
-			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 153, 10, 10);
+			g.fillOval(23+19*(players.get(3).getScore()-1)+425+425, 153, 10, 10);
 		} else if (players.get(3).getScore() > 20 && players.get(3).getScore() <=40) {
-			g.fillOval(23+20*(players.get(3).getScore()-21)+425+425, 175, 10, 10);
+			g.fillOval(23+19*(players.get(3).getScore()-21)+425+425, 175, 10, 10);
 		} else if (players.get(3).getScore() == 0) {
 			g.fillOval(23+425+425,134,10,10);
 		} else if (players.get(3).getScore() > 40 && players.get(3).getScore() <=60) {
-			g.fillOval(23+20*(players.get(3).getScore()-41)+425+425, 197, 10, 10);
+			g.fillOval(23+2019*(players.get(3).getScore()-41)+425+425, 197, 10, 10);
 		} else if (players.get(3).getScore() > 60 && players.get(3).getScore() <=80) {
-			g.fillOval(23+20*(players.get(3).getScore()-61)+425+425, 219, 10, 10);
+			g.fillOval(23+19*(players.get(3).getScore()-61)+425+425, 219, 10, 10);
 		} else if (players.get(3).getScore() > 80 && players.get(3).getScore() <=100) {
-			g.fillOval(23+20*(players.get(3).getScore()-81)+425+425, 241, 10, 10);
+			g.fillOval(23+19*(players.get(3).getScore()-81)+425+425, 241, 10, 10);
 		}
 
 		drawOtherWalls(g);
@@ -973,6 +965,28 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("BACK", 586, 40);
 	}
 	
+	public void drawViewDiscard(Graphics g) {
+		
+		g.drawImage(blackTile,512,139,80,80,null);
+		g.drawImage(cyanTile,512,139+85,80,80,null);
+		g.drawImage(iceTile,512,139+85+85,80,80,null);
+		g.drawImage(orangeTile,512,139+85+85+85,80,80,null);
+		g.drawImage(redTile,512,139+85+85+85+85,80,80,null);
+		g.setColor(new Color(255,255,255,127));
+		g.fillRect(501, 2, 280, 56);
+		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.setColor(Color.BLACK);
+		g.drawString("x" + AL.getColorCntDiscard(0), 512+85, 139+50);
+		g.drawString("x" + AL.getColorCntDiscard(1), 512+85, 139+85+50);
+		g.drawString("x" + AL.getColorCntDiscard(2), 512+85, 139+85+85+50);
+		g.drawString("x" + AL.getColorCntDiscard(3), 512+85, 139+85+85+85+50);
+		g.drawString("x" + AL.getColorCntDiscard(4), 512+85, 139+85+85+85+85+50);
+		g.drawRect(501, 2, 280, 56);		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 45)); 
+		g.drawString("BACK", 586, 40);
+	}
+	
 	public void drawHome(Graphics g) {
 		g.drawImage(wallPaper, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(0,100,100,127));
@@ -981,6 +995,21 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.fillRect(326, 13, 636, 636);
 		g.drawImage(homeScreen, 338, 24,612, 612, null);
 		g.drawRect(458, 524, 370, 97);
+	}
+	
+	public void drawTilesForOutsideFacts(Graphics g, int x, int y, int factoryNum) {
+		if(factories.get(factoryNum-1).getFactoryTiles().size()>0) {
+			g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(0)),x,y,45,45,null);
+			if(factories.get(factoryNum-1).getFactoryTiles().size()>1) {
+				g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(1)),x+50,y,45,45,null);
+				if (factories.get(factoryNum-1).getFactoryTiles().size()>2) {
+					g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(2)),x+50,y+50,45,45,null);
+					if (factories.get(factoryNum-1).getFactoryTiles().size()>3) {
+						g.drawImage(getTileImage(factories.get(factoryNum-1).getFactoryTiles().get(3)),x,y+50,45,45,null);
+					}
+				}
+			}
+		}
 	}
 	
 	enum GameState {
@@ -1008,6 +1037,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		VIEWFACTORY9,
 		ADDBONUSES,
 		VIEWBAG,
+		VIEWDISCARD,
 		OVER;
 	}
 	
