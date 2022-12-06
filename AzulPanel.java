@@ -70,10 +70,20 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.HOME) {
 			drawHome(g);
 		} else if (gs == GameState.OVER) {
-			g.setColor(Color.WHITE);
-			g.fillRect(0, 0,getWidth(), getHeight());
-			g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-			g.drawString("PLAYER[s] " + AL.getWinner() + " WINS THE GAME!", 100, 100);
+	            g.setColor(Color.WHITE);
+	            g.fillRect(0, 0,getWidth(), getHeight());
+	            System.out.print("White");
+	            g.setColor(Color.BLACK);
+	            g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+	            int i= 0;
+	            int c=1;
+	            while(i < AL.getWinner().size()) {
+	                g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
+	                i=i+2;
+	                c++;
+	                System.out.println("loop");
+	                }
+	        
 		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		}
@@ -117,23 +127,53 @@ public class AzulPanel extends JPanel implements MouseListener {
 			} else if (x>=644 && x<=752 && y>=554 && y<=620) {
 				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(0)) return;
 				AL.clearFactory(factories.get(this.getFactoryNum()-1),0);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}				
 			} else if (x>=752 && x<=860 && y>=554 && y<=620) {
 				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(1)) return;
 				AL.clearFactory(factories.get(this.getFactoryNum()-1),1);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=861 && x<=969 && y>=554 && y<=620) {
-				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(2)) return;
+				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(2)) return;				
 				AL.clearFactory(factories.get(this.getFactoryNum()-1),2);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=970 && x<=1078 && y>=554 && y<=620) {
 				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(3)) return;
 				AL.clearFactory(factories.get(this.getFactoryNum()-1),3);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=1078 && x<=1186 && y>=554 && y<=620) {
-				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(4)) return;
+				if (!factories.get(this.getFactoryNum()-1).getFactoryTiles().contains(4)) return;				
 				AL.clearFactory(factories.get(this.getFactoryNum()-1),4);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			}
 			
 		} else if (gs == GameState.VIEWCENTERPILE) {
@@ -142,23 +182,53 @@ public class AzulPanel extends JPanel implements MouseListener {
 			} else if (x>=644 && x<=752 && y>=554 && y<=620) {
 				if (!AL.getCenterpile().contains(0)) return;
 				AL.clearCenterpile(0);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=752 && x<=860 && y>=554 && y<=620) {
 				if (!AL.getCenterpile().contains(1)) return;
 				AL.clearCenterpile(1);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=861 && x<=969 && y>=554 && y<=620) {
 				if (!AL.getCenterpile().contains(2)) return;
 				AL.clearCenterpile(2);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=970 && x<=1078 && y>=554 && y<=620) {
 				if (!AL.getCenterpile().contains(3)) return;
 				AL.clearCenterpile(3);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			} else if (x>=1078 && x<=1186 && y>=554 && y<=620) {
 				if (!AL.getCenterpile().contains(4)) return;
 				AL.clearCenterpile(4);
-				gs = GameState.ADDTILETOSTAIRCASE;
+				if (!players.get(0).canPlaceTileInRow(1) && !players.get(0).canPlaceTileInRow(2) && !players.get(0).canPlaceTileInRow(3) && !players.get(0).canPlaceTileInRow(4) && !players.get(0).canPlaceTileInRow(5)) {
+					players.get(0).eatIt();
+					gs = GameState.ENDTURN;
+				} else {
+					System.out.println("NDSANIODSAMOIDAS");
+					gs = GameState.ADDTILETOSTAIRCASE;
+				}
 			}
 		} else if (gs == GameState.ADDTILETOSTAIRCASE) {
 			if (x>= 557 && x<= 1267 && y>= 130 && y<=250) {
@@ -373,7 +443,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 75)); 
-		g2d.drawString("Factory " + this.getFactoryNum(), -612, 1000);
+		g2d.drawString("Factory " + this.getFactoryNum(), -800, 1350);
 		g2d.setTransform(defaultAt);
 		
 		g.setColor(new Color(255,0,0,127));
@@ -513,6 +583,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		if (!players.get(0).canPlaceTileInRow(5)) {
 			g.fillRect(557+142+142+142+142,131,141,119);
 		}
+
 		g.setColor(Color.BLACK);
 		for (int n=0; n<players.get(0).getHand().size(); n++) {
 			g.drawImage(getTileImage(players.get(0).getHand().get(n)),555+45*n,292,41,41,null);
@@ -574,7 +645,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 75)); 
-		g2d.drawString("Player #" + players.get(0).getPlayerID(), -625, 58);
+		g2d.drawString("Player #" + players.get(0).getPlayerID(), -820, 65);
 		g2d.setTransform(defaultAt);
 		g.drawRect(2,215,48,205);
 		if (players.get(0).getScore() <= 20 && players.get(0).getScore() >= 1) {
@@ -790,7 +861,6 @@ public class AzulPanel extends JPanel implements MouseListener {
 						g.drawImage(cyanTile, 223+37*c+425+425, 279+37*r, 33,33,null);
 					} else if (((r==0) && (c==1)) || ((r==1) && (c==2)) || ((r==2) && (c==3)) || ((r==3) && (c==4)) || ((r==4) && (c==0))) {
 						g.drawImage(orangeTile, 223+37*c+425+425, 279+37*r, 33,33,null);
-					} else if (((r==0) && (c==2)) || ((r==1) && (c==3)) || ((r==2) && (c==4)) || ((r==3) && (c==0)) || ((r==4) && (c==1))) {
 						g.drawImage(redTile, 223+37*c+425+425, 279+37*r, 33,33,null);
 					} else if (((r==0) && (c==3)) || ((r==1) && (c==4)) || ((r==2) && (c==0)) || ((r==3) && (c==1)) || ((r==4) && (c==2))) {
 						g.drawImage(blackTile, 223+37*c+425+425, 279+37*r, 33,33,null);
