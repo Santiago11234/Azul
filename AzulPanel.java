@@ -334,32 +334,32 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("VIEW", 95, 50); // view button
 		// FACTORIES 
 		g.drawImage(factory,735,0,140,140,null); // FACTORY 1, INCREASES BY GOING CLOCKWISE;
-		drawTilesForOutsideFacts(g,755,20, 1);
+		drawTilesForOutsideFacts(g,755,20, 1);  
 
 		g.drawImage(factory,955,0,140,140,null);
-		drawTilesForOutsideFacts(g,975,20, 2);
+		drawTilesForOutsideFacts(g,975,20, 2);  
 
 		g.drawImage(factory,590,130,140,140,null);
-		drawTilesForOutsideFacts(g,610,150, 3);
+		drawTilesForOutsideFacts(g,610,150, 9);  
 
 		g.drawImage(factory,1110,130,140,140,null);
-		drawTilesForOutsideFacts(g,1130,150, 4);
+		drawTilesForOutsideFacts(g,1130,150, 3);
 		
 		g.drawImage(factory,550,305,140,140,null);
-		drawTilesForOutsideFacts(g,570,325, 5);
+		drawTilesForOutsideFacts(g,570,325, 8);
 
 		g.drawImage(factory,1120,305,140,140,null);
-		drawTilesForOutsideFacts(g,1140,325, 6);
+		drawTilesForOutsideFacts(g,1140,325, 4);
 
 		g.drawImage(factory,650,465,140,140,null);	
 		drawTilesForOutsideFacts(g,670,485, 7);
 
 		g.drawImage(factory,1030,465,140,140,null);
-		drawTilesForOutsideFacts(g,1050,485, 8);
+		drawTilesForOutsideFacts(g,1050,485, 5);
 
 		g.drawImage(factory,845,510,140,140,null);	
-		drawTilesForOutsideFacts(g,865,530, 9);
-
+		drawTilesForOutsideFacts(g,865,530, 6);   
+  
 		g.setColor(new Color(255,0,0,127));		
 		g.fillOval(780, 190, 260, 260);
 		g.setColor(new Color(0,0,0,255));
@@ -441,7 +441,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 				}
 			}
 		}
-		
+
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(645, 555, 540, 65);
 		g.setColor(new Color(0,100,255,255));
