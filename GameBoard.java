@@ -31,36 +31,77 @@ public class GameBoard {
 		hand = new ArrayList<Integer>();
 	}
 	
-		//0=black 1=cyan 2=red. 3=orange. 4= ive
-	public boolean canPlaceTileInRow(int r, int tile) {
-		int t = 0;
-		if(tile == 0) {
-			t = 3;
-		} 
-		else if(tile == 1) {
-			t = 0;
-		}  
-		else if(tile == 2) {
-			t = 4;
-		} 
-		else if(tile == 3) {
-			t = 1;
+	public boolean canPlaceTileInRow(int r) {
+		int t = hand.get(0);
+		if (r == 1) {
+			if (t==0) {
+				if (wall[0][3]) return false;
+			} else if (t==1) {
+				if (wall[0][0]) return false;
+			} else if (t==2) {
+				if (wall[0][4]) return false;
+			} else if (t==3) {
+				if (wall[0][1]) return false;
+			} else if (t==4) {
+				if (wall[0][2]) return false;
+			}
+		} else if (r == 2) {
+			if (t==0) {
+				if (wall[1][4]) return false;
+			} else if (t==1) {
+				if (wall[1][1]) return false;
+			} else if (t==2) {
+				if (wall[1][0]) return false;
+			} else if (t==3) {
+				if (wall[1][2]) return false;
+			} else if (t==4) {
+				if (wall[1][3]) return false;
+			}
+		} else if (r == 3) {
+			if (t==0) {
+				if (wall[2][0]) return false;
+			} else if (t==1) {
+				if (wall[2][2]) return false;
+			} else if (t==2) {
+				if (wall[2][1]) return false;
+			} else if (t==3) {
+				if (wall[2][3]) return false;
+			} else if (t==4) {
+				if (wall[2][4]) return false;
+			}
+		} else if (r == 4) {
+			if (t==0) {
+				if (wall[3][1]) return false;
+			} else if (t==1) {
+				if (wall[3][3]) return false;
+			} else if (t==2) {
+				if (wall[3][2]) return false;
+			} else if (t==3) {
+				if (wall[3][4]) return false;
+			} else if (t==4) {
+				if (wall[3][0]) return false;
+			}
+		} else if (r == 5) {
+			if (t==0) {
+				if (wall[4][2]) return false;
+			} else if (t==1) {
+				if (wall[4][4]) return false;
+			} else if (t==2) {
+				if (wall[4][3]) return false;
+			} else if (t==3) {
+				if (wall[4][0]) return false;
+			} else if (t==4) {
+				if (wall[4][1]) return false;
+			}
 		}
-		else if(tile == 4) {
-			t = 2;
-		}
-		int coll = (t + r-1) % 5;
-		
-		if(wall[r-1][coll]) return false;
 		if (getRow(r).size() > 0) {
-			if (hand.get(0) != getRow(r).get(0) || rowIsFull(r)) return false;
+			if (hand.get(0) != getRow(r).get(0)) return false;
 		}
-		
-
+		if (rowIsFull(r)) {
+			return false;
+		}
 		return true;
 	}
-
-	
 	
 	public ArrayList<Integer> getHand() {
 		return hand;
@@ -83,11 +124,11 @@ public class GameBoard {
 	}
 	
 	public boolean rowIsFull(int r) {
-		if (getRow(r).equals(row1)) return (row1.size() == 1);
-		if (getRow(r).equals(row2)) return (row2.size() == 2);
-		if (getRow(r).equals(row3)) return (row3.size() == 3);
-		if (getRow(r).equals(row4)) return (row4.size() == 4);
-		if (getRow(r).equals(row5)) return (row5.size() == 5);
+		if (r==1) return (row1.size() == 1);
+		if (r==2) return (row2.size() == 2);
+		if (r==3) return (row3.size() == 3);
+		if (r==4) return (row4.size() == 4);
+		if (r==5) return (row5.size() == 5);
 		System.out.println("rowIsFull() method");
 		return true;
 	}
@@ -106,7 +147,7 @@ public class GameBoard {
 		} else if (hand.size() + getRow(row).size() > row) {
 			int k = hand.size();
 			for (int i=0; i<k; i++) {
-				if (!rowIsFull(row) || canPlaceTileInRow(row, hand.get(0)) ) {
+				if (!rowIsFull(row)) {
 					getRow(row).add(hand.remove(0));
 				} else {
 					System.out.println("REEE");
@@ -140,6 +181,7 @@ public class GameBoard {
 			}
 		}
 	} */
+	
 	
 	public ArrayList<Integer> getRow(int r) {
 		switch(r) {
