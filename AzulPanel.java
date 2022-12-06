@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 public class AzulPanel extends JPanel implements MouseListener {
 
 	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground, homeScreen, wallPaper, bag, bag2;
-	private GameState gs = GameState.OVER;
+	private GameState gs = GameState.HOME;
 	private AzulLogic AL;
 	private ArrayList<Factory> factories;
 	private ArrayList<GameBoard> players;
@@ -33,8 +33,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodBackground.jpg"));
 			homeScreen = ImageIO.read(AzulPanel.class.getResource("/Images/HomeScreen.png"));
 			wallPaper = ImageIO.read(AzulPanel.class.getResource("/Images/wallPaper.jpg"));
-			bag = ImageIO.read(AzulPanel.class.getResource("/Images/bag.png"));
-			bag2 = ImageIO.read(AzulPanel.class.getResource("/Images/bag2.png"));
+			bag = ImageIO.read(AzulPanel.class.getResource("/Images/Bag.png"));
+			bag2 = ImageIO.read(AzulPanel.class.getResource("/Images/Bag2.png"));
 		}
         catch(Exception E){
             System.out.println("Exception Error");
@@ -51,7 +51,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		// super.paint(g);
 
 		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
-		g.setColor(new Color(0,0,0,127));
+		g.setColor(new Color(255,255,255,127));
 		
 		if (gs == GameState.PLAY) {						
 			drawPlay(g);
@@ -70,20 +70,11 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.HOME) {
 			drawHome(g);
 		} else if (gs == GameState.OVER) {
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0,getWidth(), getHeight());
-            System.out.print("White");
-            g.setColor(Color.BLACK);
-            g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-            int i= 0;
-            int c=1;
-            while(i < AL.getWinner().size()) {
-                g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
-                i=i+2;
-                c++;
-                System.out.println("loop");
-                }
-        }else if (gs == GameState.VIEWBAG) {
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0,getWidth(), getHeight());
+			g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+			g.drawString("PLAYER[s] " + AL.getWinner() + " WINS THE GAME!", 100, 100);
+		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		}
 	}
@@ -173,23 +164,22 @@ public class AzulPanel extends JPanel implements MouseListener {
 			if (x>= 557 && x<= 1267 && y>= 130 && y<=250) {
 
 				if (x>=556 && x< 556 + 142) {
-					if (!players.get(0).canPlaceTileInRow(1, players.get(0).getHand().get(0))) return;
+					if (!players.get(0).canPlaceTileInRow(1)) return;
 					players.get(0).addTilesToRow(1);
 				} else if (x>=556+142 && x< 556+142+142) {
-					if (!players.get(0).canPlaceTileInRow(2, players.get(0).getHand().get(0))) return;
+					if (!players.get(0).canPlaceTileInRow(2)) return;
 					players.get(0).addTilesToRow(2);
 				} else if (x>=556+142+142 && x< 556+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(3, players.get(0).getHand().get(0))) return;
+					if (!players.get(0).canPlaceTileInRow(3)) return;
 					players.get(0).addTilesToRow(3);
 				} else if (x>=556+142+142+142 && x< 556+142+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(4, players.get(0).getHand().get(0))) return;
+					if (!players.get(0).canPlaceTileInRow(4)) return;
 					players.get(0).addTilesToRow(4);
 				} else if (x>=556+142+142+142+142 && x< 556+142+142+142+142+142) {
-					if (!players.get(0).canPlaceTileInRow(5, players.get(0).getHand().get(0))) return;
+					if (!players.get(0).canPlaceTileInRow(5)) return;
 					players.get(0).addTilesToRow(5);
 				}
 				
-
 				gs = GameState.ENDTURN;
 				
 			}
@@ -221,15 +211,15 @@ public class AzulPanel extends JPanel implements MouseListener {
 				// logic: row 1 to change, discard change, wall change, etc...
 				// graphic: row 1 to change, wall change
 				if (AL.getCurrentRow() == 1) {
-					AL.addTileToWall(players.get(0).getRow(1));
+					AL.addTileToWall(1);
 				} else if (AL.getCurrentRow() == 2) {
-					AL.addTileToWall(players.get(0).getRow(2));
+					AL.addTileToWall(2);
 				} else if (AL.getCurrentRow() == 3) {
-					AL.addTileToWall(players.get(0).getRow(3));
+					AL.addTileToWall(3);
 				} else if (AL.getCurrentRow() == 4) {
-					AL.addTileToWall(players.get(0).getRow(4));
+					AL.addTileToWall(4);
 				} else if (AL.getCurrentRow() == 5) {
-					AL.addTileToWall(players.get(0).getRow(5));
+					AL.addTileToWall(5);
 				} else if (AL.getCurrentRow() == 6) {
 					AL.clearFloorLine();
 				} else if (AL.getCurrentRow() == 7) {
@@ -386,9 +376,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g2d.drawString("Factory " + this.getFactoryNum(), -612, 1000);
 		g2d.setTransform(defaultAt);
 		
-		//here
 		g.setColor(new Color(255,0,0,127));
-		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(0) )  {
+		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(0))  {
 			g.fillRect(645, 555, 106, 65);
 		}
 		if (!AL.getFactories().get(getFactoryNum()-1).getFactoryTiles().contains(1)) {
@@ -509,21 +498,19 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("th", 596+142+142+142+30, 182);
 		g.drawString("th", 596+142+142+142+142+30, 182);
 		g.setColor(new Color(255,0,0,127));
-
-		System.out.println(players.get(0).getHand().get(0));
-		if (!players.get(0).canPlaceTileInRow(1, players.get(0).getHand().get(0))) {
+		if (!players.get(0).canPlaceTileInRow(1)) {
 			g.fillRect(557,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(2, players.get(0).getHand().get(0))) {
+		if (!players.get(0).canPlaceTileInRow(2)) {
 			g.fillRect(557+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(3, players.get(0).getHand().get(0))) {
+		if (!players.get(0).canPlaceTileInRow(3)) {
 			g.fillRect(557+142+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(4, players.get(0).getHand().get(0))) {
+		if (!players.get(0).canPlaceTileInRow(4)) {
 			g.fillRect(557+142+142+142,131,141,119);
 		}
-		if (!players.get(0).canPlaceTileInRow(5, players.get(0).getHand().get(0))) {
+		if (!players.get(0).canPlaceTileInRow(5)) {
 			g.fillRect(557+142+142+142+142,131,141,119);
 		}
 		g.setColor(Color.BLACK);
@@ -593,15 +580,15 @@ public class AzulPanel extends JPanel implements MouseListener {
 		if (players.get(0).getScore() <= 20 && players.get(0).getScore() >= 1) {
 			g.fillOval(75+23*(players.get(0).getScore()-1), 101, 15, 15);
 		} else if (players.get(0).getScore() > 20 && players.get(0).getScore() <=40) {
-			g.fillOval(75+23*(players.get(0).getScore()-1), 124, 15, 15);
+			g.fillOval(75+23*((players.get(0).getScore()-1) - 20), 124, 15, 15);
 		} else if (players.get(0).getScore() == 0) {
 			g.fillOval(75, 74, 15, 15);
 		} else if (players.get(0).getScore() > 40 && players.get(0).getScore() <=60) {
-			g.fillOval(75+23*(players.get(0).getScore()-1), 147, 15, 15);
+			g.fillOval(75+23*((players.get(0).getScore()-1) - 40), 147, 15, 15);
 		} else if (players.get(0).getScore() > 60 && players.get(0).getScore() <=80) {
-			g.fillOval(75+23*(players.get(0).getScore()-1), 170, 15, 15);
+			g.fillOval(75+23*((players.get(0).getScore()-1) - 60), 170, 15, 15);
 		} else if (players.get(0).getScore() > 80 && players.get(0).getScore() <=100) {
-			g.fillOval(75+23*(players.get(0).getScore()-1), 193, 15, 15);
+			g.fillOval(75+23*((players.get(0).getScore()-1) - 80), 193, 15, 15);
 		}
 		
 		drawWall(g);
@@ -715,43 +702,43 @@ public class AzulPanel extends JPanel implements MouseListener {
 		if (players.get(1).getScore() <= 20 && players.get(1).getScore() >= 1) {
 			g.fillOval(23+20*(players.get(1).getScore()-1), 153, 10, 10);
 		} else if (players.get(1).getScore() > 20 && players.get(1).getScore() <=40) {
-			g.fillOval(23+20*(players.get(1).getScore()-1), 175, 10, 10);
+			g.fillOval(23+20*(players.get(1).getScore()-21), 175, 10, 10);
 		} else if (players.get(1).getScore() == 0) {
 			g.fillOval(23,134,10,10);
 		} else if (players.get(1).getScore() > 40 && players.get(1).getScore() <=60) {
-			g.fillOval(23+20*(players.get(1).getScore()-1), 197, 10, 10);
+			g.fillOval(23+20*(players.get(1).getScore()-41), 197, 10, 10);
 		} else if (players.get(1).getScore() > 60 && players.get(1).getScore() <=80) {
-			g.fillOval(23+20*(players.get(1).getScore()-1), 219, 10, 10);
+			g.fillOval(23+20*(players.get(1).getScore()-61), 219, 10, 10);
 		} else if (players.get(1).getScore() > 80 && players.get(1).getScore() <=100) {
-			g.fillOval(23+20*(players.get(1).getScore()-1), 241, 10, 10);
+			g.fillOval(23+20*(players.get(1).getScore()-81), 241, 10, 10);
 		}
 		
 		if (players.get(2).getScore() <= 20 && players.get(2).getScore() >= 1) {
 			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 153, 10, 10);
 		} else if (players.get(2).getScore() > 20 && players.get(2).getScore() <=40) {
-			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 175, 10, 10);
+			g.fillOval(23+20*(players.get(2).getScore()-21)+425, 175, 10, 10);
 		} else if (players.get(2).getScore() == 0) {
 			g.fillOval(23+425,134,10,10);
 		} else if (players.get(2).getScore() > 40 && players.get(2).getScore() <=60) {
-			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 197, 10, 10);
+			g.fillOval(23+20*(players.get(2).getScore()-41)+425, 197, 10, 10);
 		} else if (players.get(2).getScore() > 60 && players.get(2).getScore() <=80) {
-			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 219, 10, 10);
+			g.fillOval(23+20*(players.get(2).getScore()-61)+425, 219, 10, 10);
 		} else if (players.get(2).getScore() > 80 && players.get(2).getScore() <=100) {
-			g.fillOval(23+20*(players.get(2).getScore()-1)+425, 241, 10, 10);
+			g.fillOval(23+20*(players.get(2).getScore()-81)+425, 241, 10, 10);
 		}
 		
 		if (players.get(3).getScore() <= 20 && players.get(3).getScore() >= 1) {
 			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 153, 10, 10);
 		} else if (players.get(3).getScore() > 20 && players.get(3).getScore() <=40) {
-			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 175, 10, 10);
+			g.fillOval(23+20*(players.get(3).getScore()-21)+425+425, 175, 10, 10);
 		} else if (players.get(3).getScore() == 0) {
 			g.fillOval(23+425+425,134,10,10);
 		} else if (players.get(3).getScore() > 40 && players.get(3).getScore() <=60) {
-			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 197, 10, 10);
+			g.fillOval(23+20*(players.get(3).getScore()-41)+425+425, 197, 10, 10);
 		} else if (players.get(3).getScore() > 60 && players.get(3).getScore() <=80) {
-			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 219, 10, 10);
+			g.fillOval(23+20*(players.get(3).getScore()-61)+425+425, 219, 10, 10);
 		} else if (players.get(3).getScore() > 80 && players.get(3).getScore() <=100) {
-			g.fillOval(23+20*(players.get(3).getScore()-1)+425+425, 241, 10, 10);
+			g.fillOval(23+20*(players.get(3).getScore()-81)+425+425, 241, 10, 10);
 		}
 
 		drawOtherWalls(g);
