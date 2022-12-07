@@ -12,6 +12,7 @@ public class GameBoard {
 	private ArrayList<Integer> row5;
 	private boolean[][] wall;
 	private ArrayList<Integer> extraTiles;
+	private boolean isDone;
 	
 	public GameBoard(int score, int playerID) {
 		this.score = score;
@@ -29,6 +30,7 @@ public class GameBoard {
 		}
 		extraTiles = new ArrayList<Integer>();
 		hand = new ArrayList<Integer>();
+		isDone = false;
 	}
 	
 	public boolean canPlaceTileInRow(int r) {
@@ -246,32 +248,42 @@ public class GameBoard {
 		return extraTiles;
 	}
 	
-	public void addBonuses() {
+	public int addBonuses() {
+		int b = 0;
 		for (int i=0; i<5; i++) {
 			if (wall[i][0] && wall[i][1] && wall[i][2] && wall[i][3] && wall[i][4]) {
-				addScore(2);
+				b = b + 2;
 			}
 		}
 		for (int j=0; j<5; j++) {
 			if (wall[0][j] && wall[1][j] && wall[2][j] && wall[3][j] && wall[4][j]) {
-				addScore(7);
+				b = b + 7;
 			}
 		}
 		if (wall[0][0] && wall[1][1] && wall[2][2] && wall[3][3] && wall[4][4]) {
-			addScore(10);
+			b = b + 10;
 		}
 		if (wall[0][1] && wall[1][2] && wall[2][3] && wall[3][4] && wall[4][0]) {
-			addScore(10);
+			b = b + 10;
 		}
 		if (wall[0][2] && wall[1][3] && wall[2][4] && wall[3][0] && wall[4][1]) {
-			addScore(10);
+			b = b + 10;
 		}
 		if (wall[0][3] && wall[1][4] && wall[2][0] && wall[3][1] && wall[4][2]) {
-			addScore(10);
+			b = b + 10;
 		}
 		if (wall[0][4] && wall[1][0] && wall[2][1] && wall[3][2] && wall[4][3]) {
-			addScore(10);
+			b = b + 10;
 		}
+		return b;
+	}
+	
+	public boolean isDone() {
+		return isDone;
+	}
+	
+	public void setIsDone() {
+		isDone = true;
 	}
 	
 	public boolean[][] getWall() {
