@@ -34,7 +34,7 @@ public class AzulLogic {
 		System.out.println(players);
 		nextPlayerID = 1;
 		winner = new ArrayList<Integer>();
-		bonusCnt++;
+		bonusCnt=0;
 	}
 	
 	public void endTurn() {
@@ -795,7 +795,9 @@ public class AzulLogic {
 		return winner;
 	}
 	
-	
+	public void incBonusNum() {
+		bonusCnt++;
+	}
 	
 	public boolean isRoundOver() {
 		return this.roundIsOver;
