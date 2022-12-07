@@ -335,10 +335,13 @@ public class AzulPanel extends JPanel implements MouseListener {
 		// VIEW BUTTON
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(50,0,200,69); 
+		g.fillRect(223,0,277,69);
 		g.setColor(Color.BLACK);
 		g.drawRect(50, 0, 200, 69);
+		g.drawRect(223,0,277,69);
 		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
 		g.drawString("VIEW", 95, 50); // view button
+		g.drawString("Discard Pile", 268, 50);
 		// FACTORIES 
 		g.drawImage(factory,735,0,140,140,null); // FACTORY 1, INCREASES BY GOING CLOCKWISE;
 		drawTilesForOutsideFacts(g,755,20, 1);  
