@@ -82,12 +82,14 @@ public class AzulPanel extends JPanel implements MouseListener {
 	                i=i+2;
 	                c++;
 	                System.out.println("loop");
-	                }
+	           }
 	        
 		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		} else if (gs == GameState.VIEWDISCARD)  {
 			drawViewDiscard(g);
+		} else if (gs == GameState.ADDBONUSES) {
+			drawViewAddBonuses(g);
 		}
 	}
 
@@ -300,14 +302,14 @@ public class AzulPanel extends JPanel implements MouseListener {
 					Collections.rotate(players,3);
 				} else if (AL.getCurrentRow() == 8) {
 					if (AL.checkWall() == true) {
-						AL.addBonuses();
+						/* AL.addBonuses();
 						if (AL.getBonusCnt() == 4) {
 							AL.findWinner();
 							gs = GameState.OVER;
 						} else {
 							Collections.rotate(players,3);
-						}
-
+						} */
+						gs = GameState.ADDBONUSES;
 					} else {
 						AL.newRound();
 						gs = GameState.PLAY;
@@ -325,6 +327,14 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.VIEWDISCARD) {
 			if (x>=501 && x<= 781 && y>=2 && y<= 58) {
 				gs = GameState.PLAY;
+			}
+		} else if (gs == GameState.ADDBONUSES) {
+			if (!(players.get(0).isDone() && players.get(1).isDone() && players.get(2).isDone() && players.get(3).isDone())) {
+				Collections.rotate(players, 3);
+			} else {
+				AL.findWinner();
+				gs = GameState.OVER;
+				System.out.println("ur in gamestate over");
 			}
 		}
 		repaint();
@@ -1015,6 +1025,16 @@ public class AzulPanel extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void drawViewAddBonuses(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+		g.drawString("ADDED BONUS!", 696, 97);
+		players.get(0).addScore(players.get(0).addBonuses());
+		players.get(0).setIsDone();
+		drawBoard(g);
+
+	}
+	
 	enum GameState {
 
 		HOME,
@@ -1041,6 +1061,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		ADDBONUSES,
 		VIEWBAG,
 		VIEWDISCARD,
+		CLICKTOCONTINUE2,
 		OVER;
 	}
 	
