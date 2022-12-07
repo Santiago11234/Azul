@@ -54,7 +54,7 @@ public class AzulLogic {
 	public void addTileToWall(int r) {
 		
 		int t = players.get(0).getRow(r).get(0);
-		for (int c = 0; c<players.get(0).getRow(r).size()-1; c++) {
+		for (int c = 0; c<r-1; c++) {
 			discard.add(t);
 		}
 		players.get(0).getRow(r).clear();
@@ -171,7 +171,7 @@ public class AzulLogic {
 			if (t==0) {
 				if (!players.get(0).getWall()[4][2]) {
 					players.get(0).getWall()[4][2] = true;
-					scoreRow(0,3);
+					scoreRow(4,2);
 				}
 			} else if (t==1) {
 				if (!players.get(0).getWall()[4][4]) {
@@ -200,8 +200,12 @@ public class AzulLogic {
 	
 	public int scoreRow(int x, int y) {
 		int s = 1;
-
 		
+		/* System.out.println("x: " + x + " , y: " + y);
+        for (boolean[] ints : players.get(0).getWall()) {
+            System.out.println(Arrays.toString(ints));
+        } */
+        
 		if (x-1 >= 0 && players.get(0).getWall()[x-1][y]) {
 			s++;
 			if (x-2>=0 && players.get(0).getWall()[x-2][y]) {
@@ -340,6 +344,7 @@ public class AzulLogic {
 	}
 	
 	public void newRound() {
+
 		fillFactories();
 		if (nextPlayerID == 1) {
 			while (players.get(0).getPlayerID() != 1) {
@@ -358,6 +363,63 @@ public class AzulLogic {
 				Collections.rotate(players, 1);
 			}
 		}
+		int a = 0; int b = 0; int c = 0; int d = 0; int e = 0;
+		
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<factories.get(i).getFactoryTiles().size(); j++) {
+				if (factories.get(i).getFactoryTiles().get(j) == 0) {
+					a++;
+				} else if (factories.get(i).getFactoryTiles().get(j) == 1) {
+					b++;
+				} else if (factories.get(i).getFactoryTiles().get(j) == 3) {
+					d++;
+				} else if (factories.get(i).getFactoryTiles().get(j) == 4) {
+					e++;
+				} else if (factories.get(i).getFactoryTiles().get(j) == 2) {
+					c++;
+				}
+			}
+		}
+		for (int i=0; i<centerpile.size(); i++) {
+			if (centerpile.get(i) == 0) {
+				a++;
+			} else if (centerpile.get(i) == 1) {
+				b++;
+			} else if (centerpile.get(i) == 2) {
+				c++;
+			} else if (centerpile.get(i) == 3) {
+				d++;
+			} else if (centerpile.get(i) == 4) {
+				e++;
+			} 
+		} 
+		for (int i=0; i<discard.size(); i++) {
+			if (discard.get(i) == 0) {
+				a++;
+			} else if (discard.get(i) == 1) {
+				b++;
+			} else if (discard.get(i) == 2) {
+				c++;
+			} else if (discard.get(i) == 3) {
+				d++;
+			} else if (discard.get(i) == 4) {
+				e++;
+			} 
+		}  
+		for (int i=0; i<bagOfTiles.size(); i++) {
+			if (bagOfTiles.get(i) == 0) {
+				a++;
+			} else if (bagOfTiles.get(i) == 1) {
+				b++;
+			} else if (bagOfTiles.get(i) == 2) {
+				c++;
+			} else if (bagOfTiles.get(i) == 3) {
+				d++;
+			} else if (bagOfTiles.get(i) == 4) {
+				e++;
+			} 
+		} 
+		System.out.println("black" + a + "cyan" + b + "ice" + c + "orange" + d + "red" + e);
 	}
 	
 	public int getCurrentRow() {
@@ -385,9 +447,13 @@ public class AzulLogic {
 	
 	
 	public void refillBag() {
+		System.out.println("UR REFILLING THE BAG");
 		int a = discard.size();
 		for (int i=0; i<a; i++) {
 			bagOfTiles.add(discard.remove(0));
+		}
+		if (!discard.isEmpty()) {
+			System.out.println("DICARD ISNT EMPTY");
 		}
 	}
 	
