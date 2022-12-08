@@ -547,8 +547,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 		at.rotate(- Math.PI / 2);
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
-		g.setFont(bigFont.deriveFont(60f));
-		g2d.drawString("Factory " + this.getFactoryNum(), -800, 1350);
+		g.setFont(bigFont.deriveFont(40f));
+		g2d.drawString("Factory " + this.getFactoryNum(), -430, 668);
 		g2d.setTransform(defaultAt);
 		
 		g.setColor(new Color(255,0,0,127));
@@ -768,8 +768,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 		at.rotate(- Math.PI / 2);
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
-		g.setFont(bigFont.deriveFont(60f)); 
-		g2d.drawString("Player #" + players.get(0).getPlayerID(), -820, 65);
+		g.setFont(bigFont.deriveFont(30f)); 
+		g2d.drawString("Player #" + players.get(0).getPlayerID(), -390, 35);
 		g2d.setTransform(defaultAt);
 		g.drawRect(2,215,48,205);
 		if (players.get(0).getScore() <= 20 && players.get(0).getScore() >= 1) {
