@@ -32,7 +32,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 			oneTile = ImageIO.read(AzulPanel.class.getResource("/Images/OneTile.png"));
 			orangeTile = ImageIO.read(AzulPanel.class.getResource("/Images/orangeTile.png"));
 			redTile = ImageIO.read(AzulPanel.class.getResource("/Images/redTile.png"));
-			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodbackground.jpg"));
+			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodBackground.jpg"));
 			lavaBackground = ImageIO.read(AzulPanel.class.getResource("/Images/lavaBack.jpeg"));
 			iceBackground = ImageIO.read(AzulPanel.class.getResource("/Images/iceBackground.jpeg"));
 			futureBackground = ImageIO.read(AzulPanel.class.getResource("/Images/futureBackground.jpeg"));
