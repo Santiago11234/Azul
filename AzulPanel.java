@@ -12,11 +12,13 @@ import java.awt.Graphics2D;
 
 public class AzulPanel extends JPanel implements MouseListener {
 
-	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground, homeScreen, wallPaper, bag, bag2;
+	private BufferedImage azulBoard, blackTile, cyanTile, factory, iceTile, oneTile, orangeTile, redTile, woodBackground, homeScreen, wallPaper, bag, bag2, lavaBackground, iceBackground, futureBackground, background;
 	private GameState gs = GameState.HOME;
 	private AzulLogic AL;
 	private ArrayList<Factory> factories;
 	private ArrayList<GameBoard> players;
+	private int w, h;
+	private Font font, bigFont, midFont;
 
 	
 	public AzulPanel() {
@@ -30,11 +32,16 @@ public class AzulPanel extends JPanel implements MouseListener {
 			oneTile = ImageIO.read(AzulPanel.class.getResource("/Images/OneTile.png"));
 			orangeTile = ImageIO.read(AzulPanel.class.getResource("/Images/orangeTile.png"));
 			redTile = ImageIO.read(AzulPanel.class.getResource("/Images/redTile.png"));
-			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodBackground.jpg"));
+			woodBackground = ImageIO.read(AzulPanel.class.getResource("/Images/woodbackground.jpg"));
+			lavaBackground = ImageIO.read(AzulPanel.class.getResource("/Images/lavaBack.jpeg"));
+			iceBackground = ImageIO.read(AzulPanel.class.getResource("/Images/iceBackground.jpeg"));
+			futureBackground = ImageIO.read(AzulPanel.class.getResource("/Images/futureBackground.jpeg"));
 			homeScreen = ImageIO.read(AzulPanel.class.getResource("/Images/HomeScreen.png"));
 			wallPaper = ImageIO.read(AzulPanel.class.getResource("/Images/wallPaper.jpg"));
 			bag = ImageIO.read(AzulPanel.class.getResource("/Images/Bag.png"));
 			bag2 = ImageIO.read(AzulPanel.class.getResource("/Images/Bag2.png"));
+			background = woodBackground;
+			
 		}
         catch(Exception E){
             System.out.println("Exception Error");
@@ -45,15 +52,32 @@ public class AzulPanel extends JPanel implements MouseListener {
 		players = AL.getPlayers();
 
 		addMouseListener(this);
+
 	}
 	
+
+	public static Font load(String filename, float size) {
+		Font f;
+		try {
+			f = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(AzulPanel.class.getResourceAsStream("/" + filename))).deriveFont(size);
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+			f = new Font("Calibri", Font.BOLD, 40);
+		}
+		return f;
+	}
+
 	public void paint(Graphics g) {
 		super.paint(g);
-		int w = this.getWidth();
-		int h = this.getHeight();
-		System.out.println("Width is " + w + ", and Height is " + w + ".");
+		w = this.getWidth();
+		h = this.getHeight();
+		font = load("Images/font.ttf", 30f);
+		bigFont = load("Images/font.ttf", 40f);
+		midFont = load("Images/font.ttf", 25f);
+		
+		System.out.println("Width is " + w + ", and Height is " + h + ".");
 
-		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
+		if (gs != GameState.HOME) g.drawImage(background, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(255,255,255,127));
 		
 		if (gs == GameState.PLAY) {						
@@ -92,7 +116,27 @@ public class AzulPanel extends JPanel implements MouseListener {
 		int y = e.getY();
 		System.out.println("(" + x + ", " + y + ")");
 		if (gs == GameState.PLAY) {
-			if (Math.pow((x-805),2) + Math.pow((y-69),2) <= 4900) {
+			if (x > w/13 && x < 3*w/13 && y > 5*h/6 && y < 19*h /20) {
+				background = woodBackground;
+				gs = GameState.PLAY;
+				System.out.println("wood");
+			}
+			else if (x > 4*w/13 && x < 6*w/13 && y > 5*h/6 && y < 19*h /20) {
+				background = iceBackground;
+				System.out.println("iuce");
+				gs = GameState.PLAY;
+			}
+			else if (x > 7*w/13 && x < 9*w/13 && y > 5*h/6 && y < 19*h /20) {
+				background = lavaBackground;
+				gs = GameState.PLAY;
+				System.out.println("la");
+			}
+			else if (x > 10*w/13 && x < 12*w/13 && y > 5*h/6 && y < 19*h /20) {
+				background = futureBackground;
+				gs = GameState.PLAY;
+				System.out.println("fut");
+			}
+			else if (Math.pow((x-805),2) + Math.pow((y-69),2) <= 4900) {
 				gs = GameState.VIEWFACTORY1;
 			} else if (Math.pow((x-1025),2) + Math.pow((y-69),2) <= 4900) {
 				gs = GameState.VIEWFACTORY2;
@@ -361,12 +405,13 @@ public class AzulPanel extends JPanel implements MouseListener {
 		drawBoard(g);
 		// VIEW BUTTON
 		g.setColor(new Color(255,255,255,127));
-		g.fillRect(50,0,200,69); 
-		g.fillRect(223,0,277,69);
+		g.fillRect(50,0,180,69); 
+		g.fillRect(250,0,277,69);
 		g.setColor(Color.BLACK);
-		g.drawRect(50, 0, 200, 69);
-		g.drawRect(223,0,277,69);
-		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.drawRect(50,0,180,69);
+		g.drawRect(250,0,277,69);
+		//g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.setFont(bigFont);
 		g.drawString("VIEW", 95, 50); // view button
 		g.drawString("Discard Pile", 268, 50);
 		// FACTORIES 
@@ -400,13 +445,14 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(new Color(255,0,0,127));		
 		g.fillOval(780, 190, 260, 260);
 		g.setColor(new Color(0,0,0,255));
-		g.setFont(new Font("Calibri", Font.BOLD, 25)); 
+		//g.setFont(new Font("Calibri", Font.BOLD, 25)); 
+		g.setFont(midFont);
 		g.drawString("CENTERPILE", 840, 330);
 		g.drawImage(bag,1130,-10,150,150,null);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 20)); 
+		g.setFont(midFont); 
 		g.drawString("TILES: " + AL.getBag().size(), 1170,75);
-		g.setFont(new Font("Calibri", Font.BOLD, 25)); 
+		g.setFont(midFont); 
 		
 		g.setColor(new Color(0,0,0,127));
 		if (factories.get(0).isEmpty()) {
@@ -449,7 +495,8 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(804, 12, 240, 74);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 55)); 
+		//g.setFont(new Font("Calibri", Font.BOLD, 55)); 
+		g.setFont(bigFont);
 		g.drawString("BACK", 850, 65);
 		g.drawRect(803, 11, 241, 75);
 		if(factories.get(getFactoryNum()-1).getFactoryTiles().size()>0) {
@@ -469,7 +516,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(new Color(0,100,255,255));
 		g.fillRect(573, 510, 70, 140);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 40));
+		g.setFont(bigFont);
 		g.drawString("T", 590, 540);		
 		g.drawString("A", 590, 570);
 		g.drawString("K", 590, 605);
@@ -498,7 +545,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		at.rotate(- Math.PI / 2);
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 75)); 
+		g.setFont(bigFont.deriveFont(60f));
 		g2d.drawString("Factory " + this.getFactoryNum(), -800, 1350);
 		g2d.setTransform(defaultAt);
 		
@@ -530,14 +577,13 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(804, 12, 240, 74);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 55)); 
+		g.setFont(bigFont); 
 		g.drawString("BACK", 850, 65);
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(645, 555, 540, 65);
 		g.setColor(new Color(0,100,255,255)); // blue
 		g.fillRect(573, 510, 70, 140);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
 		g.drawString("T", 590, 540);
 		g.drawString("A", 590, 570);
 		g.drawString("K", 590, 605);
@@ -660,6 +706,26 @@ public class AzulPanel extends JPanel implements MouseListener {
 	}
 	
 	public void drawBoard(Graphics g) {
+		g.drawImage(background, 0, 0,getWidth(), getHeight(), null);
+		g.setColor(Color.BLACK);
+		g.drawRect(w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.drawRect(4*w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.drawRect(7*w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.drawRect(10*w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.setColor(new Color(255,255,255,127));
+
+		g.fillRect(w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.fillRect(4*w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.fillRect(7*w/13, 5*h/6, 2*w/13, h/6-h/20);
+		g.fillRect(10*w/13, 5*h/6, 2*w/13, h/6-h/20);
+
+		g.setFont(font);
+		g.setColor(Color.BLACK);
+		g.drawString("Default", w/13+w/30, 5*h/6 + h/15);
+		g.drawString("Ice", 4*w/13+w/25, 5*h/6 + h/15);
+		g.drawString("Lava", 7*w/13+w/27, 5*h/6 + h/15);
+		g.drawString("Futuristic", 10*w/13+w/30, 5*h/6 + h/15);
+		
 		// g.fillRect(50,0,200,69); 
 		// g.fillRect(280,0,200,69);
 		g.setColor(Color.BLACK);
@@ -700,7 +766,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		at.rotate(- Math.PI / 2);
 		g2d.setTransform(at);
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 75)); 
+		g.setFont(bigFont.deriveFont(60f)); 
 		g2d.drawString("Player #" + players.get(0).getPlayerID(), -820, 65);
 		g2d.setTransform(defaultAt);
 		g.drawRect(2,215,48,205);
@@ -735,7 +801,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.fillRect(219, 278, 189, 187);
 		g.fillRect(219+425, 278, 189, 187);
 		g.fillRect(219+425+425, 278, 189, 187);
-		g.setFont(new Font("Calibri", Font.BOLD, 40));
+		g.setFont(bigFont);
 		g.setColor(Color.BLACK);
 		g.drawRect(50,2,200,60); 
 		g.drawRect(14, 72, 397, 51);
@@ -743,28 +809,28 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawRect(854, 72, 397, 51);
 		g.drawString("BACK", 100, 45);
 		if (players.get(0).getPlayerID() == 1) {
-			g.drawString("Player #2's Gameboard",20,110);
+			g.drawString("Player #2's Board",20,110);
 
-			g.drawString("Player #3's Gameboard",440,110);
+			g.drawString("Player #3's Board",440,110);
 
-			g.drawString("Player #4's Gameboard",860,110);
+			g.drawString("Player #4's Board",860,110);
 
 		} else if (players.get(0).getPlayerID() == 2) {
 
-			g.drawString("Player #3's Gameboard",20,110);
+			g.drawString("Player #3's Board",20,110);
 
-			g.drawString("Player #4's Gameboard",440,110);
+			g.drawString("Player #4's Board",440,110);
 
-			g.drawString("Player #1's Gameboard",860,110);
+			g.drawString("Player #1's Board",860,110);
 
 		} else if (players.get(0).getPlayerID() == 3) {
-			g.drawString("Player #4's Gameboard",20,110);
-			g.drawString("Player #1's Gameboard",440,110);
-			g.drawString("Player #2's Gameboard",860,110);
+			g.drawString("Player #4's Board",20,110);
+			g.drawString("Player #1's Board",440,110);
+			g.drawString("Player #2's Board",860,110);
 		} else if (players.get(0).getPlayerID() == 4) {
-			g.drawString("Player #1's Gameboard",20,110);
-			g.drawString("Player #2's Gameboard",440,110);
-			g.drawString("Player #3's Gameboard",860,110);
+			g.drawString("Player #1's Board",20,110);
+			g.drawString("Player #2's Board",440,110);
+			g.drawString("Player #3's Board",860,110);
 		}
 		
 		if (players.get(3).getRow(1).size() > 0) {
@@ -991,7 +1057,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("x" + AL.getColorCntBag(4), 512+85, 139+85+85+85+85+50);
 		g.drawRect(501, 2, 280, 56);		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 45)); 
+		g.setFont(bigFont); 
 		g.drawString("BACK", 586, 40);
 	}
 	
@@ -1004,7 +1070,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawImage(redTile,512,139+85+85+85+85,80,80,null);
 		g.setColor(new Color(255,255,255,127));
 		g.fillRect(501, 2, 280, 56);
-		g.setFont(new Font("Calibri", Font.BOLD, 40)); 
+		g.setFont(bigFont); 
 		g.setColor(Color.BLACK);
 		g.drawString("x" + AL.getColorCntDiscard(0), 512+85, 139+50);
 		g.drawString("x" + AL.getColorCntDiscard(1), 512+85, 139+85+50);
@@ -1013,7 +1079,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.drawString("x" + AL.getColorCntDiscard(4), 512+85, 139+85+85+85+85+50);
 		g.drawRect(501, 2, 280, 56);		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 45)); 
+		g.setFont(bigFont); 
 		g.drawString("BACK", 586, 40);
 	}
 	
@@ -1055,19 +1121,51 @@ public class AzulPanel extends JPanel implements MouseListener {
 	}
 	
 	public void drawOver(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0,getWidth(), getHeight());
-        System.out.print("White");
+		g.setColor(new Color(255, 198,153));
+		
+
+		//fir
+		g.fillRect(w/3, h/3, w/3, h/12);
+
+		//sec
+		g.fillRect(w/3, h/2, w/3, h/12);
+
+		//thir
+		g.fillRect(w/3,2*h/3, w/3, h/12);
+
+		//fout
+        g.fillRect(w/3, 5*h/6, w/3, h/12);
+
         g.setColor(Color.BLACK);
-        g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+		//fir
+		g.drawRect(w/3, h/3, w/3, h/12);
+
+		//sec
+		g.drawRect(w/3, h/2, w/3, h/12);
+
+		//thir
+		g.drawRect(w/3,2*h/3, w/3, h/12);
+
+		//fout
+        g.drawRect(w/3, 5*h/6, w/3, h/12);
+
+		
+        g.setFont(font);
+
+		g.setColor(Color.BLACK);
+		String[] arr = { "st", "nd", "rd", "th"};
         int i= 0;
         int c=1;
         while(i < AL.getWinner().size()) {
-            g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
+            g.drawString(c + arr[c-1] + " Player: " +Integer.toString(AL.getWinner().get(i))+ ", Score: " + Integer.toString(AL.getWinner().get(i+1)), w/3+w/25 , h/3 + h/20 + (c-1) * h / 6 );
             i=i+2;
             c++;
             System.out.println("loop");
        }
+	   font = font.deriveFont(120f);
+	   g.setFont(font);
+	   g.drawString("LeaderBoard", w/4, h/6);
+	   font = font.deriveFont(30f);
 	}
 	
 	public void drawClickToContinue2(Graphics g) {
