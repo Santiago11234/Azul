@@ -533,6 +533,7 @@ public class AzulLogic {
 	}
 	
 	public boolean checkWall() {
+		
 		for (int i=0; i<players.size(); i++) {
 			if (players.get(i).checkWall()) {
 				return true;
@@ -797,6 +798,10 @@ public class AzulLogic {
 	
 	public void incBonusNum() {
 		bonusCnt++;
+	}
+	
+	public ArrayList<Integer> getDiscard()  {
+		return discard;
 	}
 	
 	public boolean isRoundOver() {
