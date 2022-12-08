@@ -55,7 +55,7 @@ public class AzulLogic {
 		
 		int t = players.get(0).getRow(r).get(0);
 		for (int c = 0; c<r-1; c++) {
-			discard.add(t);
+			if(discard.size() <=7) discard.add(t);
 		}
 		players.get(0).getRow(r).clear();
 
@@ -334,7 +334,7 @@ public class AzulLogic {
 			if (players.get(0).getExtraTiles().get(0) == 5) {
 				centerpile.add(players.get(0).getExtraTiles().remove(0));
 			} else {
-				discard.add(players.get(0).getExtraTiles().remove(0));
+				if(discard.size() <=7) discard.add(players.get(0).getExtraTiles().remove(0));
 			}
 			
 		}
