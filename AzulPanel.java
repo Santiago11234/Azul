@@ -49,6 +49,9 @@ public class AzulPanel extends JPanel implements MouseListener {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
+		int w = this.getWidth();
+		int h = this.getHeight();
+		System.out.println("Width is " + w + ", and Height is " + w + ".");
 
 		if (gs != GameState.HOME) g.drawImage(woodBackground, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(255,255,255,127));
@@ -70,26 +73,15 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.HOME) {
 			drawHome(g);
 		} else if (gs == GameState.OVER) {
-	            g.setColor(Color.WHITE);
-	            g.fillRect(0, 0,getWidth(), getHeight());
-	            System.out.print("White");
-	            g.setColor(Color.BLACK);
-	            g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-	            int i= 0;
-	            int c=1;
-	            while(i < AL.getWinner().size()) {
-	                g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
-	                i=i+2;
-	                c++;
-	                System.out.println("loop");
-	           }
-	        
+			drawOver(g);
 		} else if (gs == GameState.VIEWBAG) {
 			drawViewBag(g);
 		} else if (gs == GameState.VIEWDISCARD)  {
 			drawViewDiscard(g);
 		} else if (gs == GameState.ADDBONUSES) {
 			drawViewAddBonuses(g);
+		} else if (gs == GameState.CLICKTOCONTINUE2) {
+			drawClickToContinue2(g);
 		}
 	}
 
@@ -237,23 +229,45 @@ public class AzulPanel extends JPanel implements MouseListener {
 				}
 			}
 		} else if (gs == GameState.ADDTILETOSTAIRCASE) {
+			
 			if (x>= 557 && x<= 1267 && y>= 130 && y<=250) {
-
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				
 				if (x>=556 && x< 556 + 142) {
-					if (!players.get(0).canPlaceTileInRow(1)) return;
-					players.get(0).addTilesToRow(1);
+					if (!players.get(0).canPlaceTileInRow(1)) return;					
+					temp = players.get(0).addTilesToRow(1);
+					int t = temp.size();
+					for (int i=0; i<t; i++) {
+						if (temp.get(i) != 5) AL.getDiscard().add(temp.get(i));
+					}
 				} else if (x>=556+142 && x< 556+142+142) {
 					if (!players.get(0).canPlaceTileInRow(2)) return;
-					players.get(0).addTilesToRow(2);
+					temp = players.get(0).addTilesToRow(2);
+					int t = temp.size();
+					for (int i=0; i<t; i++) {
+						if (temp.get(i) != 5) AL.getDiscard().add(temp.get(i));
+					}
 				} else if (x>=556+142+142 && x< 556+142+142+142) {
 					if (!players.get(0).canPlaceTileInRow(3)) return;
-					players.get(0).addTilesToRow(3);
+					temp = players.get(0).addTilesToRow(3);
+					int t = temp.size();
+					for (int i=0; i<t; i++) {
+						if (temp.get(i) != 5) AL.getDiscard().add(temp.get(i));
+					}
 				} else if (x>=556+142+142+142 && x< 556+142+142+142+142) {
 					if (!players.get(0).canPlaceTileInRow(4)) return;
-					players.get(0).addTilesToRow(4);
+					temp = players.get(0).addTilesToRow(4);
+					int t = temp.size();
+					for (int i=0; i<t; i++) {
+						if (temp.get(i) != 5) AL.getDiscard().add(temp.get(i));
+					}
 				} else if (x>=556+142+142+142+142 && x< 556+142+142+142+142+142) {
 					if (!players.get(0).canPlaceTileInRow(5)) return;
-					players.get(0).addTilesToRow(5);
+					temp = players.get(0).addTilesToRow(5);
+					int t = temp.size();
+					for (int i=0; i<t; i++) {
+						if (temp.get(i) != 5) AL.getDiscard().add(temp.get(i));
+					}
 				}
 				
 				gs = GameState.ENDTURN;
@@ -309,7 +323,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 						} else {
 							Collections.rotate(players,3);
 						} */
-						gs = GameState.ADDBONUSES;
+						gs = GameState.CLICKTOCONTINUE2;
 					} else {
 						AL.newRound();
 						gs = GameState.PLAY;
@@ -331,11 +345,14 @@ public class AzulPanel extends JPanel implements MouseListener {
 		} else if (gs == GameState.ADDBONUSES) {
 			if (!(players.get(0).isDone() && players.get(1).isDone() && players.get(2).isDone() && players.get(3).isDone())) {
 				Collections.rotate(players, 3);
+				gs = GameState.CLICKTOCONTINUE2;
 			} else {
 				AL.findWinner();
 				gs = GameState.OVER;
 				System.out.println("ur in gamestate over");
 			}
+		} else if (gs == GameState.CLICKTOCONTINUE2) {
+			gs = GameState.ADDBONUSES;
 		}
 		repaint();
 	}
@@ -1029,10 +1046,34 @@ public class AzulPanel extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 100)); 
 		g.drawString("ADDED BONUS!", 696, 97);
+		g.setFont(new Font("Calibri", Font.BOLD, 20)); 
+		g.drawString("(CLICK TO CONTINUE)", 796, 197);
 		players.get(0).addScore(players.get(0).addBonuses());
 		players.get(0).setIsDone();
 		drawBoard(g);
 
+	}
+	
+	public void drawOver(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0,getWidth(), getHeight());
+        System.out.print("White");
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Calibri", Font.BOLD, 100)); 
+        int i= 0;
+        int c=1;
+        while(i < AL.getWinner().size()) {
+            g.drawString(c + " Player: " +Integer.toString(AL.getWinner().get(i))+ " Score: " + Integer.toString(AL.getWinner().get(i+1)), 100 ,100 + 125*i);
+            i=i+2;
+            c++;
+            System.out.println("loop");
+       }
+	}
+	
+	public void drawClickToContinue2(Graphics g) {
+		drawBoard(g);
+		g.setFont(new Font("Calibri", Font.BOLD, 60)); 
+		g.drawString("CLICK TO ADD BONUS", 552, 132);		
 	}
 	
 	enum GameState {
