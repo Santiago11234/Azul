@@ -142,25 +142,32 @@ public class GameBoard {
 		}
 	}
 	
-	public void addTilesToRow(int row) {
+	public ArrayList<Integer> addTilesToRow(int row) {
+		
+		ArrayList<Integer> out = new ArrayList<Integer>();
 		
 		if (hand.contains(5)) {
 			extraTiles.add(hand.remove(hand.indexOf(5)));
 		}
-		if(row > 5 || row < 0) {
+		/* if(row > 5 || row < 0) {
 			System.out.println("the row that is going into addTilesToRow in GameBoard class is either greater than 5 or less than 0");
 			return;
 		}  else if (!rowIsEmpty(row) && !rowIsFull(row) && getTile(row) != hand.get(0)) {
 			System.out.println("you are adding a different colored tile to an already filled row");
 			return;
-		} else if (hand.size() + getRow(row).size() > row) {
+		} else */ if (hand.size() + getRow(row).size() > row) {
 			int k = hand.size();
 			for (int i=0; i<k; i++) {
 				if (!rowIsFull(row)) {
 					getRow(row).add(hand.remove(0));
 				} else {
 					System.out.println("REEE");
-					extraTiles.add(hand.remove(0));
+					if (extraTiles.size() >= 7) {
+						out.add(hand.remove(0));
+					} else {
+						extraTiles.add(hand.remove(0));
+					}
+					
 				}
 			}
 		} else {
@@ -171,6 +178,7 @@ public class GameBoard {
 			}
 
 		}
+		return out;
 	}
 	
 	public boolean ready() {
