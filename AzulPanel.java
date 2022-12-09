@@ -75,7 +75,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		bigFont = load("Images/font.ttf", 40f);
 		midFont = load("Images/font.ttf", 25f);
 		
-		System.out.println("Width is " + w + ", and Height is " + h + ".");
+		// System.out.println("Width is " + w + ", and Height is " + h + ".");
 
 		if (gs != GameState.HOME) g.drawImage(background, 0, 0,getWidth(), getHeight(), null);
 		g.setColor(new Color(255,255,255,127));
@@ -1122,41 +1122,41 @@ public class AzulPanel extends JPanel implements MouseListener {
 	}
 	
 	public void drawOver(Graphics g) {
-		g.setColor(new Color(255, 198,153));
-		//fir
-		g.fillRect(w/3, h/3, w/3, h/12);
-		//sec
-		g.fillRect(w/3, h/2, w/3, h/12);
-		//thir
-		g.fillRect(w/3,2*h/3, w/3, h/12);
-		//fout
-        g.fillRect(w/3, 5*h/6, w/3, h/12);
-        g.setColor(Color.BLACK);
-		//fir
-		g.drawRect(w/3, h/3, w/3, h/12);
-		//sec
-		g.drawRect(w/3, h/2, w/3, h/12);
-		//thir
-		g.drawRect(w/3,2*h/3, w/3, h/12);
-		//fout
-        g.drawRect(w/3, 5*h/6, w/3, h/12);
-        g.setFont(font);
-		g.setColor(Color.BLACK);
-		String[] arr = { "st", "nd", "rd", "th", ""};
-        int i= 0;
-        int c=1;
-        while(i < AL.getWinner().size() && c < 5) {
-			System.out.println(c-1);
-            g.drawString(c + arr[c-1] + " Player: " +Integer.toString(AL.getWinner().get(i))+ ", Score: " + Integer.toString(AL.getWinner().get(i+1)), w/3+w/25 , h/3 + h/20 + (c-1) * h / 6 );
-			System.out.println("done");
-            i+=2;
-            c++;
-            System.out.println();
-       }
-	   font = font.deriveFont(120f);
-	   g.setFont(font);
-	   g.drawString("LeaderBoard", w/4, h/6);
-	   font = font.deriveFont(30f);
+	        g.setColor(new Color(255, 198,153));
+	        //fir
+	        g.fillRect(w/3, h/3, w/3, h/12);
+	        //sec
+	        g.fillRect(w/3, h/2, w/3, h/12);
+	        //thir
+	        g.fillRect(w/3,2*h/3, w/3, h/12);
+	        //fout
+	        g.fillRect(w/3, 5*h/6, w/3, h/12);
+	        g.setColor(Color.BLACK);
+	        //fir
+	        g.drawRect(w/3, h/3, w/3, h/12);
+	        //sec
+	        g.drawRect(w/3, h/2, w/3, h/12);
+	        //thir
+	        g.drawRect(w/3,2*h/3, w/3, h/12);
+	        //fout
+	        g.drawRect(w/3, 5*h/6, w/3, h/12);
+	        g.setFont(font);
+	        g.setColor(Color.BLACK);
+	        String[] arr = { "st", "nd", "rd", "th", ""};
+	        int i= 0;
+	        int c=1;
+	        while(i < AL.getWinner().size() && c < 5) {
+	            System.out.println(c-1);
+	            g.drawString(c + arr[c-1] + " Player: " +Integer.toString(AL.getWinner().get(i))+ ", Score: " + Integer.toString(AL.getWinner().get(i+1)), w/3+w/25 , h/3 + h/20 + (c-1) * h / 6 );
+	            System.out.println("done");
+	            i+=2;
+	            c++;
+	            System.out.println();
+	       }
+	       font = font.deriveFont(120f);
+	       g.setFont(font);
+	       g.drawString("LeaderBoard", w/4, h/6);
+	       font = font.deriveFont(30f);
 	}
 	
 	public void drawClickToContinue2(Graphics g) {
