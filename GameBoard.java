@@ -199,6 +199,9 @@ public class GameBoard {
 		}
 	} */
 	
+	public boolean equals(GameBoard gb1, GameBoard gb2, GameBoard gb3) {
+		return (this.score == gb1.getScore() || this.score == gb2.getScore() || this.score == gb3.getScore());
+	}
 	
 	public ArrayList<Integer> getRow(int r) {
 		switch(r) {
