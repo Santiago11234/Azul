@@ -115,6 +115,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 		int x = e.getX();
 		int y = e.getY();
 		System.out.println("(" + x + ", " + y + ")");
+		System.out.println(gs);
 		if (gs == GameState.PLAY) {
 			if (x > w/13 && x < 3*w/13 && y > 5*h/6 && y < 19*h /20) {
 				background = woodBackground;
@@ -173,7 +174,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}				
 			} else if (x>=752 && x<=860 && y>=554 && y<=620) {
@@ -183,7 +184,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=861 && x<=969 && y>=554 && y<=620) {
@@ -193,7 +194,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=970 && x<=1078 && y>=554 && y<=620) {
@@ -203,7 +204,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=1078 && x<=1186 && y>=554 && y<=620) {
@@ -213,7 +214,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			}
@@ -228,7 +229,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=752 && x<=860 && y>=554 && y<=620) {
@@ -238,7 +239,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=861 && x<=969 && y>=554 && y<=620) {
@@ -248,7 +249,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=970 && x<=1078 && y>=554 && y<=620) {
@@ -258,7 +259,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			} else if (x>=1078 && x<=1186 && y>=554 && y<=620) {
@@ -268,7 +269,7 @@ public class AzulPanel extends JPanel implements MouseListener {
 					players.get(0).eatIt();
 					gs = GameState.ENDTURN;
 				} else {
-					System.out.println("NDSANIODSAMOIDAS");
+					// System.out.println("NDSANIODSAMOIDAS");
 					gs = GameState.ADDTILETOSTAIRCASE;
 				}
 			}
@@ -1111,14 +1112,16 @@ public class AzulPanel extends JPanel implements MouseListener {
 	}
 	
 	public void drawViewAddBonuses(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.setFont(new Font("Calibri", Font.BOLD, 100)); 
-		g.drawString("ADDED BONUS!", 696, 97);
-		g.setFont(new Font("Calibri", Font.BOLD, 20)); 
-		g.drawString("(CLICK TO CONTINUE)", 796, 197);
+		
 		players.get(0).addScore(players.get(0).addBonuses());
 		players.get(0).setIsDone();
 		drawBoard(g);
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 80)); 
+		g.drawString("ADDED BONUS!", 696, 97);
+		g.setFont(new Font("Calibri", Font.BOLD, 20)); 
+		g.drawString("(CLICK TO CONTINUE)", 796, 197);
+		System.out.println("JERKREKJRKEJKREK");
 	}
 	
 	public void drawOver(Graphics g) {
@@ -1145,13 +1148,27 @@ public class AzulPanel extends JPanel implements MouseListener {
 	        String[] arr = { "st", "nd", "rd", "th", ""};
 	        int i= 0;
 	        int c=1;
+	        String s = "";
+	        /* while (players.get(0).getPlayerID() != 1) {
+	        	Collections.rotate(players, 1);
+	        } */
+	        int k = 0;
 	        while(i < AL.getWinner().size() && c < 5) {
+	        	k = AL.getWinner().get(i);
+	        	while (players.get(0).getPlayerID() != k) {
+		        	Collections.rotate(players, 1);
+		        }
+	        	if (AL.getPlayer(k).equals(players.get(1), players.get(2), players.get(3))) {
+	        		s = "(tied)";
+	        	}
 	            System.out.println(c-1);
-	            g.drawString(c + arr[c-1] + " Player: " +Integer.toString(AL.getWinner().get(i))+ ", Score: " + Integer.toString(AL.getWinner().get(i+1)), w/3+w/25 , h/3 + h/20 + (c-1) * h / 6 );
+	            g.drawString(c + arr[c-1] + " Player: " +Integer.toString(AL.getWinner().get(i))+ ", Score: " + Integer.toString(AL.getWinner().get(i+1))
+	            + s, w/3 + w/60, h/3 + h/20 + (c-1) * h / 6 );
 	            System.out.println("done");
 	            i+=2;
 	            c++;
 	            System.out.println();
+	            s = "";
 	       }
 	       font = font.deriveFont(120f);
 	       g.setFont(font);
