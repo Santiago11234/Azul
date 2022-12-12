@@ -198,6 +198,15 @@ public class AzulLogic {
 
 	}
 	
+	public GameBoard getPlayer(int ID) {
+		for (int i=0; i<4; i++) {
+			if (players.get(i).getPlayerID() == ID) {
+				return players.get(i);
+			} 
+		}
+		return players.get(0);
+	}
+	
 	public int scoreRow(int x, int y) {
 		int s = 1;
 		
